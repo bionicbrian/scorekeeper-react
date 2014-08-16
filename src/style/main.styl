@@ -1,0 +1,145 @@
+body
+    font-size: 18px
+    font-family: "Lucide Grande", Helvetica, sans-serif
+    -webkit-user-select: none
+    text-transform: uppercase
+
+button
+    border-radius: 3px
+
+h1
+    font-size: 22px
+
+h2
+    font-size: 18px
+    line-height: 1
+    font-weight: bold
+    margin: 0
+
+input
+    line-height: 1
+    display: inline-block
+
+    &.h1
+        font-size: 22px
+        margin-bottom: 15px
+
+    &.name
+        font-size: 18px
+        font-weight: bold
+        margin: 0
+
+    &.score
+    &.turns
+        font-size: 18px
+
+.score-line
+    font-size: 22px
+    line-height: 1.2
+    margin: 0
+
+.player
+    margin-top: 10px
+
+    .controls
+        overflow: hidden
+        padding: 2px
+        border: 3px solid black
+
+        &.is-scoring
+            background-color: #f4f4f4
+            border: 3px solid #999
+
+        .turns-link
+            display: none
+            clear: both
+            width: 100%
+            text-align: center
+            font-size: 0.8em
+            margin-top: 5px
+
+            &.is-showing
+                display: block
+
+            & button
+                width: 100%
+
+    .turns
+        display: none
+        margin: 0 10px
+        border: 3px solid black
+        border-top: none
+        border-bottom-right-radius: 5px
+        border-bottom-left-radius: 5px
+
+        &.is-expanded
+            display: block
+
+        .turn
+            background-color: #f6f6f6
+            overflow: hidden
+            padding: 0 10px
+            margin-bottom: 1px
+
+.add-player-link
+    font-size: 1em
+    margin-bottom: 10px
+
+    & > a, a:active, a:hover, a:visited
+        color: #999
+
+        &:hover
+            color: #777
+
+.new-player
+    margin-bottom: 10px;
+
+    .name
+        display: inline-block
+    .add-player-btn
+        display: inline-block
+
+.player.isEditing
+    > .name-and-score
+        width: 70%
+
+.name-and-score
+    box-sizing: border-box
+    display: inline-block
+    float: left
+    padding: 10px
+    width: 50%
+    text-overflow: ellipsis
+
+    .for
+        font-size: 0.5em
+        
+
+.edit
+    font-size: 0.8em
+
+    & > a, a:active, a:hover, a:visited
+        color: #cdcdcd
+
+        &:hover
+            color: #777
+
+.score-buttons
+    display: inline-block
+    float: right
+    width: 50%
+    text-align: right
+
+    & button
+        font-size: 24px
+        line-height: 1
+        display: inline-block
+        padding: 5px
+        margin-top: 10px
+        width: 30%
+        height: 40px
+
+    & > .edit
+        margin-top: 10px
+        font-size: 1.2em
+        line-height: 40px;

@@ -1,5 +1,10 @@
 /** @jsx React.DOM */
 
+window.addEventListener("load", function() {
+    new FastClick(document.body);
+}, false);
+
+
 function fetchPlayers() {
     return [
         {
@@ -15,7 +20,7 @@ function fetchPlayers() {
 var Turn = React.createClass({
     render: function () {
         return (
-            <span class="turnValue">{this.props.amount}</span>
+            <div className="turn">{this.props.amount}</div>
         );
     }
 });
@@ -80,7 +85,7 @@ var Player = React.createClass({
             if (this.state.isShowingTurns) {
                 turns = this.state.turns.map(function (turn) {
                     return (
-                        <li><Turn amount={turn} /></li>
+                        <Turn amount={turn} />
                     );
                 });
             }
@@ -91,11 +96,26 @@ var Player = React.createClass({
         }
 
         return (
-            <div class="player">
-                {this.props.name} | {totalPoints} {increment} for {this.state.turnsCount} | <button onClick={this.markIt.bind(this, -1)}>-</button> | <button onClick={this.markIt.bind(this, 0)}>0</button> | <button onClick={this.markIt.bind(this, 1)}>+</button> | <button onClick={this.toggleTurns}>{this.state.showOrHide} turns</button>
-                <ul>
+            <div className="player">
+                <div className={"controls" + (this.state.isScoring ? " is-scoring" : "")}>
+                    <div className="name-and-score">
+                        <h2>{this.props.name}</h2>
+                        <div className="score">
+                            <h2>{totalPoints} {increment} <span className="for">FOR</span> {this.state.turnsCount}</h2>
+                        </div>
+                    </div>
+                    <div className="score-buttons">
+                        <button onClick={this.markIt.bind(this, -1)}>-</button>
+                        <button onClick={this.markIt.bind(this, 0)}>0</button>
+                        <button onClick={this.markIt.bind(this, 1)}>+</button>
+                    </div>
+                    <div className={"turns-link" + (this.state.turns.length > 0 ? " is-showing" : "")}>
+                        <button onClick={this.toggleTurns}>{this.state.showOrHide} turns</button>
+                    </div>
+                </div>
+                <div className={"turns" + (this.state.isShowingTurns ? " is-expanded" : "")}>
                     {turns}
-                </ul>
+                </div>
             </div>
         );
     }
@@ -115,18 +135,16 @@ var ScoreKeeper = React.createClass({
     render: function () {
         var players = this.state.players.map(function (player) {
             return (
-                <li><Player name={player.name} turns={player.turns} /></li>
+                <Player name={player.name} turns={player.turns} />
             );
         });
 
         return (
-            <div class="app">
+            <div className="app">
                 <h1>Keep Score</h1>
-                <input type="text" value={this.state.newPlayerName} onChange={this.handlePlayerNameChange} />
-                <button onClick={this.addPlayer}>Add Player</button>
-                <ul>
-                    {players}
-                </ul>
+                <input type="text" className="name" value={this.state.newPlayerName} onChange={this.handlePlayerNameChange} />
+                <button className="add-player-btn" onClick={this.addPlayer}>+ ADD PLAYER</button>
+                {players}
             </div>
         );
     }
