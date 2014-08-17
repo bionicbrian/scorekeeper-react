@@ -4,7 +4,6 @@ window.addEventListener("load", function() {
     new FastClick(document.body);
 }, false);
 
-
 function fetchPlayers() {
     return [
         {
@@ -18,9 +17,18 @@ function fetchPlayers() {
 }
 
 var Turn = React.createClass({
+    getInitialState: function () {
+        return { isEditing: false };
+    },
+    toggleEditing: function () {
+        this.setState({ isEditing: !this.state.isEditing });
+    },
+    deleteTurn: function () {
+        this.props.deleteTurn(this.props.key);
+    },
     render: function () {
         return (
-            <div className="turn">{this.props.amount}</div>
+            <div className="turn">{this.props.amount} | <button onClick={this.toggleEditing}>EDIT</button> <button onClick={this.deleteTurn}>DELETE</button></div>
         );
     }
 });
@@ -50,6 +58,17 @@ var Player = React.createClass({
         this.setState({ showOrHide: this.state.showOrHide === "Show" ? "Hide" : "Show" });
     },
 
+    deleteTurn: function (index) {
+        var removedTurn = this.state.turns.splice(index, 1);
+        this.setState({ turns: this.state.turns });
+
+        if (!this.state.turns.length) {
+            this.setState({ isShowingTurns: false });
+        }
+
+        this.setState({ turnsCount: this.state.turnsCount - 1 });
+    },
+
     markIt: function (val) {
         this.setState({ increment: this.state.increment + val });
         this.setState({ isScoring: true });
@@ -57,7 +76,7 @@ var Player = React.createClass({
         clearTimeout(this.scoringTimeout);
 
         // Delay the actual adding of the turn until the score value is set
-        this.scoringTimeout = setTimeout(this.addTurn.bind(this), 1000);
+        this.scoringTimeout = setTimeout(this.addTurn, 1000);
 
         this.incrementTurns();
 
@@ -83,9 +102,10 @@ var Player = React.createClass({
 
         if (this.state.turns) {
             if (this.state.isShowingTurns) {
-                turns = this.state.turns.map(function (turn) {
+                var that = this;
+                turns = this.state.turns.map(function (turn, index) {
                     return (
-                        <Turn amount={turn} />
+                        <Turn amount={turn} key={index} deleteTurn={that.deleteTurn} />
                     );
                 });
             }
