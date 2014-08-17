@@ -39,7 +39,6 @@ var Player = React.createClass({
             isShowingTurns: false,
             showOrHide: "Show",
             turns: this.props.turns || [],
-            turnsCount: this.props.turns && this.props.turns.length || 0,
             isScoring: false,
             isEditing: false,
             increment: 0
@@ -48,10 +47,6 @@ var Player = React.createClass({
 
     scoringTimeout: null,
     pointValues: [0, 1, -1],
-
-    incrementTurns: _.debounce(function (player) {
-        this.setState({ turnsCount: this.state.turnsCount + 1 });
-    }, 1000, true),
 
     toggleTurns: function () {
         this.setState({ isShowingTurns: !this.state.isShowingTurns });
@@ -65,8 +60,6 @@ var Player = React.createClass({
         if (!this.state.turns.length) {
             this.setState({ isShowingTurns: false });
         }
-
-        this.setState({ turnsCount: this.state.turnsCount - 1 });
     },
 
     markIt: function (val) {
@@ -77,10 +70,6 @@ var Player = React.createClass({
 
         // Delay the actual adding of the turn until the score value is set
         this.scoringTimeout = setTimeout(this.addTurn, 1000);
-
-        this.incrementTurns();
-
-        return false;
     },
 
     addTurn: function () {
@@ -121,7 +110,7 @@ var Player = React.createClass({
                     <div className="name-and-score">
                         <h2>{this.props.name}</h2>
                         <div className="score">
-                            <h2>{totalPoints} {increment} <span className="for">FOR</span> {this.state.turnsCount}</h2>
+                            <h2>{totalPoints} {increment} <span className={"turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}><span className="for">FOR</span> {this.state.turns.length}</span></h2>
                         </div>
                     </div>
                     <div className="score-buttons">

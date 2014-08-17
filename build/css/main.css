@@ -117,7 +117,10 @@ input.turns {
   width: 50%;
   text-overflow: ellipsis;
 }
-.name-and-score .for {
+.name-and-score .score h2 .turns-count.hide-turns-count {
+  display: none;
+}
+.name-and-score .score h2 .turns-count .for {
   font-size: 0.5em;
 }
 .edit {
