@@ -81,6 +81,18 @@ input.turns {
   padding: 0 10px;
   margin-bottom: 1px;
 }
+.player .turns .turn > .amount-value {
+  display: inline-block;
+}
+.player .turns .turn > form {
+  display: none;
+}
+.player .turns .turn.is-editing > form {
+  display: inline-block;
+}
+.player .turns .turn.is-editing > .amount-value {
+  display: none;
+}
 .add-player-link {
   font-size: 1em;
   margin-bottom: 10px;

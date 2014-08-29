@@ -18,17 +18,39 @@ function fetchPlayers() {
 
 var Turn = React.createClass({displayName: 'Turn',
     getInitialState: function () {
-        return { isEditing: false };
+        return {
+            isEditing: false,
+            amount: this.props.initialAmount
+        };
     },
     toggleEditing: function () {
         this.setState({ isEditing: !this.state.isEditing });
+        if (this.state.isEditing) {
+            this.refs.turnInput.getDOMNode().focus();
+        }
     },
     deleteTurn: function () {
         this.props.deleteTurn(this.props.key);
     },
+    updateValue: function (event) {
+        this.setState({ amount: +event.target.value });
+        this.props.updateTurn(this.props.key, +event.target.value);
+    },
     render: function () {
+        var cx = React.addons.classSet;
+        var classes = cx({
+            "turn": true,
+            "is-editing": this.state.isEditing
+        });
         return (
-            React.DOM.div({className: "turn"}, this.props.amount, " | ", React.DOM.button({onClick: this.toggleEditing}, "EDIT"), " ", React.DOM.button({onClick: this.deleteTurn}, "DELETE"))
+            React.DOM.div({className: classes}, 
+                React.DOM.span({className: "amount-value"}, this.state.amount), 
+                React.DOM.form({onSubmit: this.toggleEditing}, 
+                    React.DOM.input({value: this.state.amount, onChange: this.updateValue, ref: "turnInput"})
+                ), 
+                React.DOM.button({onClick: this.toggleEditing}, this.state.isEditing ? "SAVE" : "EDIT"), 
+                React.DOM.button({onClick: this.deleteTurn}, "DELETE")
+            )
         );
     }
 });
@@ -60,6 +82,11 @@ var Player = React.createClass({displayName: 'Player',
         if (!this.state.turns.length) {
             this.setState({ isShowingTurns: false });
         }
+    },
+
+    updateTurn: function (index, value) {
+        var updatedTurn = this.state.turns.splice(index, 1, value);
+        this.setState({ turns: this.state.turns });
     },
 
     markIt: function (val) {
@@ -94,7 +121,7 @@ var Player = React.createClass({displayName: 'Player',
                 var that = this;
                 turns = this.state.turns.map(function (turn, index) {
                     return (
-                        Turn({amount: turn, key: index, deleteTurn: that.deleteTurn})
+                        Turn({initialAmount: turn, key: index, updateTurn: that.updateTurn, deleteTurn: that.deleteTurn})
                     );
                 });
             }

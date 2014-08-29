@@ -81,6 +81,19 @@ input
             padding: 0 10px
             margin-bottom: 1px
 
+            & > .amount-value
+                display: inline-block
+
+            & > form
+                display: none
+
+            &.is-editing
+                & > form
+                    display: inline-block
+
+                & > .amount-value
+                    display: none
+
 .add-player-link
     font-size: 1em
     margin-bottom: 10px
