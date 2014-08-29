@@ -140,6 +140,7 @@ var ScoreKeeper = React.createClass({displayName: 'ScoreKeeper',
     addPlayer: function () {
         this.setState({ players: this.state.players.concat([{ name: this.state.newPlayerName }]) });
         this.setState({ newPlayerName: "" });
+        return false;
     },
     render: function () {
         var players = this.state.players.map(function (player) {
@@ -151,8 +152,10 @@ var ScoreKeeper = React.createClass({displayName: 'ScoreKeeper',
         return (
             React.DOM.div({className: "app"}, 
                 React.DOM.h1(null, "Keep Score"), 
-                React.DOM.input({type: "text", className: "name", value: this.state.newPlayerName, onChange: this.handlePlayerNameChange}), 
-                React.DOM.button({className: "add-player-btn", onClick: this.addPlayer}, "+ ADD PLAYER"), 
+                React.DOM.form({onSubmit: this.addPlayer}, 
+                    React.DOM.input({type: "text", className: "name", value: this.state.newPlayerName, onChange: this.handlePlayerNameChange, onBlur: this.addPlayer}), 
+                    React.DOM.button({className: "add-player-btn", onClick: this.addPlayer}, "+ ADD PLAYER")
+                ), 
                 players
             )
         );
