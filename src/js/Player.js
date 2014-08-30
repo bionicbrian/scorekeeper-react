@@ -1,61 +1,9 @@
 /** @jsx React.DOM */
 
-window.addEventListener("load", function() {
-    new FastClick(document.body);
-}, false);
+var React = require("react/addons");
+var Turn = require("./Turn");
 
-function fetchPlayers() {
-    return [
-        {
-            name: "Brian",
-            turns: [0, -1, 5]
-        },
-        { name: "Rebecca" },
-        { name: "Finn" },
-        { name: "Dottie" }
-    ];
-}
-
-var Turn = React.createClass({
-    getInitialState: function () {
-        return {
-            isEditing: false,
-            amount: this.props.initialAmount
-        };
-    },
-    toggleEditing: function () {
-        this.setState({ isEditing: !this.state.isEditing });
-        if (this.state.isEditing) {
-            this.refs.turnInput.getDOMNode().focus();
-        }
-    },
-    deleteTurn: function () {
-        this.props.deleteTurn(this.props.key);
-    },
-    updateValue: function (event) {
-        this.setState({ amount: +event.target.value });
-        this.props.updateTurn(this.props.key, +event.target.value);
-    },
-    render: function () {
-        var cx = React.addons.classSet;
-        var classes = cx({
-            "turn": true,
-            "is-editing": this.state.isEditing
-        });
-        return (
-            <div className={classes}>
-                <span className="amount-value">{this.state.amount}</span>
-                <form onSubmit={this.toggleEditing}>
-                    <input value={this.state.amount} onChange={this.updateValue} ref="turnInput" />
-                </form>
-                <button onClick={this.toggleEditing}>{this.state.isEditing ? "SAVE" : "EDIT"}</button>
-                <button onClick={this.deleteTurn}>DELETE</button>
-            </div>
-        );
-    }
-});
-
-var Player = React.createClass({
+module.exports = React.createClass({
     getInitialState: function () {
         return {
             isShowingTurns: false,
@@ -156,40 +104,3 @@ var Player = React.createClass({
         );
     }
 });
-
-var ScoreKeeper = React.createClass({
-    getInitialState: function () {
-        return { players: fetchPlayers(), newPlayerName: "" };
-    },
-    handlePlayerNameChange: function (event) {
-        this.setState({ newPlayerName: event.target.value });
-    },
-    addPlayer: function () {
-        this.setState({ players: this.state.players.concat([{ name: this.state.newPlayerName }]) });
-        this.setState({ newPlayerName: "" });
-        return false;
-    },
-    render: function () {
-        var players = this.state.players.map(function (player) {
-            return (
-                <Player name={player.name} turns={player.turns} />
-            );
-        });
-
-        return (
-            <div className="app">
-                <h1>Keep Score</h1>
-                <form onSubmit={this.addPlayer}>
-                    <input type="text" className="name" value={this.state.newPlayerName} onChange={this.handlePlayerNameChange} onBlur={this.addPlayer} />
-                    <button className="add-player-btn" onClick={this.addPlayer}>+ ADD PLAYER</button>
-                </form>
-                {players}
-            </div>
-        );
-    }
-});
-
-React.renderComponent(
-    <ScoreKeeper />,
-    document.getElementById("main")
-);
