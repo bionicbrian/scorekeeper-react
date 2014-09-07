@@ -20455,6 +20455,7 @@ module.exports = require('./lib/React');
 var React = require("react/addons");
 var Turn = require("./Turn");
 
+// Player
 module.exports = React.createClass({displayName: 'exports',
     getInitialState: function () {
         return {
@@ -20487,6 +20488,7 @@ module.exports = React.createClass({displayName: 'exports',
     updateTurn: function (index, value) {
         var updatedTurn = this.state.turns.splice(index, 1, value);
         this.setState({ turns: this.state.turns });
+        return false;
     },
 
     markIt: function (val) {
@@ -20506,7 +20508,7 @@ module.exports = React.createClass({displayName: 'exports',
     },
 
     render: function () {
-        var turns = [];
+        var turnsComponents = [];
         var operator = "+";
         var increment = "";
         var totalPoints = 0;
@@ -20519,7 +20521,8 @@ module.exports = React.createClass({displayName: 'exports',
         if (this.state.turns) {
             if (this.state.isShowingTurns) {
                 var that = this;
-                turns = this.state.turns.map(function (turn, index) {
+                turnsComponents = this.state.turns.map(function (turn, index) {
+                    var key = Math.floor(1000 * Math.random(0, 1000));
                     return (
                         Turn({initialAmount: turn, key: index, updateTurn: that.updateTurn, deleteTurn: that.deleteTurn})
                     );
@@ -20550,7 +20553,7 @@ module.exports = React.createClass({displayName: 'exports',
                     )
                 ), 
                 React.DOM.div({className: "turns" + (this.state.isShowingTurns ? " is-expanded" : "")}, 
-                    turns
+                    turnsComponents
                 )
             )
         );
