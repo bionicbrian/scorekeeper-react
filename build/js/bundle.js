@@ -20463,9 +20463,14 @@ module.exports = React.createClass({displayName: 'exports',
             showOrHide: "Show",
             turns: this.props.turns || [],
             isScoring: false,
+            totalPoints: 0,
             isEditing: false,
             increment: 0
         };
+    },
+
+    componentWillMount: function () {
+        this.updateTotalPoints();
     },
 
     scoringTimeout: null,
@@ -20485,12 +20490,6 @@ module.exports = React.createClass({displayName: 'exports',
         }
     },
 
-    updateTurn: function (index, value) {
-        var updatedTurn = this.state.turns.splice(index, 1, value);
-        this.setState({ turns: this.state.turns });
-        return false;
-    },
-
     markIt: function (val) {
         this.setState({ increment: this.state.increment + val });
         this.setState({ isScoring: true });
@@ -20505,13 +20504,25 @@ module.exports = React.createClass({displayName: 'exports',
         this.setState({ turns: this.state.turns.concat([this.state.increment]) });
         this.setState({ isScoring: false });
         this.setState({ increment: 0 });
+        this.updateTotalPoints();
+    },
+
+    updateTurn: function (key, value) {
+        this.deleteTurn(key);
+        this.setState({ turns: this.state.turns.concat([value]) });
+    },
+
+    updateTotalPoints: function () {
+        var totalPoints = this.state.turns.reduce(function (first, second) {
+            return first + second;
+        }, 0);
+
+        this.setState({ totalPoints: totalPoints });
     },
 
     render: function () {
-        var turnsComponents = [];
-        var operator = "+";
-        var increment = "";
-        var totalPoints = 0;
+        console.log("Player render called");
+        var turnsComponents = []; var operator = "+"; var increment = "";
 
         if (this.state.isScoring) {
             operator = this.state.increment < 0 ? "-" : "+";
@@ -20522,16 +20533,11 @@ module.exports = React.createClass({displayName: 'exports',
             if (this.state.isShowingTurns) {
                 var that = this;
                 turnsComponents = this.state.turns.map(function (turn, index) {
-                    var key = Math.floor(1000 * Math.random(0, 1000));
                     return (
-                        Turn({initialAmount: turn, key: index, updateTurn: that.updateTurn, deleteTurn: that.deleteTurn})
+                        Turn({initialAmount: turn, key: index, updateTotalPoints: this.updateTotalPoints, deleteTurn: that.deleteTurn})
                     );
                 });
             }
-
-            totalPoints = this.state.turns.reduce(function (first, second) {
-                return first + second;
-            }, 0);
         }
 
         return (
@@ -20540,7 +20546,7 @@ module.exports = React.createClass({displayName: 'exports',
                     React.DOM.div({className: "name-and-score"}, 
                         React.DOM.h2(null, this.props.name), 
                         React.DOM.div({className: "score"}, 
-                            React.DOM.h2(null, totalPoints, " ", increment, " ", React.DOM.span({className: "turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}, React.DOM.span({className: "for"}, "FOR"), " ", this.state.turns.length))
+                            React.DOM.h2(null, this.state.totalPoints, " ", increment, " ", React.DOM.span({className: "turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}, React.DOM.span({className: "for"}, "FOR"), " ", this.state.turns.length))
                         )
                     ), 
                     React.DOM.div({className: "score-buttons"}, 
@@ -20586,7 +20592,9 @@ module.exports = React.createClass({displayName: 'exports',
         this.setState({ newPlayerName: event.target.value });
     },
     addPlayer: function () {
-        this.setState({ players: this.state.players.concat([{ name: this.state.newPlayerName }]) });
+        if (this.state.newPlayerName) {
+            this.setState({ players: this.state.players.concat([{ name: this.state.newPlayerName }]) });
+        }
         this.setState({ newPlayerName: "" });
         return false;
     },
@@ -20615,37 +20623,46 @@ module.exports = React.createClass({displayName: 'exports',
 
 var React = require("react/addons");
 
+// Turn
 module.exports = React.createClass({displayName: 'exports',
     getInitialState: function () {
         return {
             isEditing: false,
-            amount: this.props.initialAmount
+            // amount: this.props.initialAmount
         };
     },
+
+    componentWillMount: function () {
+        console.log(this.props.updateTotalPoints);
+    },
+
     toggleEditing: function () {
         this.setState({ isEditing: !this.state.isEditing });
         if (this.state.isEditing) {
             this.refs.turnInput.getDOMNode().focus();
         }
     },
+
     deleteTurn: function () {
         this.props.deleteTurn(this.props.key);
     },
+
     updateValue: function (event) {
-        this.setState({ amount: +event.target.value });
         this.props.updateTurn(this.props.key, +event.target.value);
     },
+
     render: function () {
-        var cx = React.addons.classSet;
-        var classes = cx({
+        var classSet = React.addons.classSet;
+        var classes = classSet({
             "turn": true,
             "is-editing": this.state.isEditing
         });
+
         return (
             React.DOM.div({className: classes}, 
                 React.DOM.span({className: "amount-value"}, this.state.amount), 
                 React.DOM.form({onSubmit: this.toggleEditing}, 
-                    React.DOM.input({value: this.state.amount, onChange: this.updateValue, ref: "turnInput"})
+                    React.DOM.input({value: this.props.initialAmount, onChange: this.updateTurn, ref: "turnInput"})
                 ), 
                 React.DOM.button({onClick: this.toggleEditing}, this.state.isEditing ? "SAVE" : "EDIT"), 
                 React.DOM.button({onClick: this.deleteTurn}, "DELETE")

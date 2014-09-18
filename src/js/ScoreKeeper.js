@@ -23,7 +23,9 @@ module.exports = React.createClass({
         this.setState({ newPlayerName: event.target.value });
     },
     addPlayer: function () {
-        this.setState({ players: this.state.players.concat([{ name: this.state.newPlayerName }]) });
+        if (this.state.newPlayerName) {
+            this.setState({ players: this.state.players.concat([{ name: this.state.newPlayerName }]) });
+        }
         this.setState({ newPlayerName: "" });
         return false;
     },

@@ -11,9 +11,14 @@ module.exports = React.createClass({
             showOrHide: "Show",
             turns: this.props.turns || [],
             isScoring: false,
+            totalPoints: 0,
             isEditing: false,
             increment: 0
         };
+    },
+
+    componentWillMount: function () {
+        this.updateTotalPoints();
     },
 
     scoringTimeout: null,
@@ -33,12 +38,6 @@ module.exports = React.createClass({
         }
     },
 
-    updateTurn: function (index, value) {
-        var updatedTurn = this.state.turns.splice(index, 1, value);
-        this.setState({ turns: this.state.turns });
-        return false;
-    },
-
     markIt: function (val) {
         this.setState({ increment: this.state.increment + val });
         this.setState({ isScoring: true });
@@ -53,13 +52,25 @@ module.exports = React.createClass({
         this.setState({ turns: this.state.turns.concat([this.state.increment]) });
         this.setState({ isScoring: false });
         this.setState({ increment: 0 });
+        this.updateTotalPoints();
+    },
+
+    updateTurn: function (key, value) {
+        this.deleteTurn(key);
+        this.setState({ turns: this.state.turns.concat([value]) });
+    },
+
+    updateTotalPoints: function () {
+        var totalPoints = this.state.turns.reduce(function (first, second) {
+            return first + second;
+        }, 0);
+
+        this.setState({ totalPoints: totalPoints });
     },
 
     render: function () {
-        var turnsComponents = [];
-        var operator = "+";
-        var increment = "";
-        var totalPoints = 0;
+        console.log("Player render called");
+        var turnsComponents = []; var operator = "+"; var increment = "";
 
         if (this.state.isScoring) {
             operator = this.state.increment < 0 ? "-" : "+";
@@ -70,16 +81,11 @@ module.exports = React.createClass({
             if (this.state.isShowingTurns) {
                 var that = this;
                 turnsComponents = this.state.turns.map(function (turn, index) {
-                    var key = Math.floor(1000 * Math.random(0, 1000));
                     return (
-                        <Turn initialAmount={turn} key={index} updateTurn={that.updateTurn} deleteTurn={that.deleteTurn} />
+                        <Turn initialAmount={turn} key={index} updateTotalPoints={this.updateTotalPoints} deleteTurn={that.deleteTurn} />
                     );
                 });
             }
-
-            totalPoints = this.state.turns.reduce(function (first, second) {
-                return first + second;
-            }, 0);
         }
 
         return (
@@ -88,7 +94,7 @@ module.exports = React.createClass({
                     <div className="name-and-score">
                         <h2>{this.props.name}</h2>
                         <div className="score">
-                            <h2>{totalPoints} {increment} <span className={"turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}><span className="for">FOR</span> {this.state.turns.length}</span></h2>
+                            <h2>{this.state.totalPoints} {increment} <span className={"turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}><span className="for">FOR</span> {this.state.turns.length}</span></h2>
                         </div>
                     </div>
                     <div className="score-buttons">
