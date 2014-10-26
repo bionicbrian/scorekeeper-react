@@ -1,38 +1,53 @@
 /** @jsx React.DOM */
 
+var Backbone = require("backbone");
 var React = require("react");
 var Player = require("./Player");
 
+var PlayerModel = Backbone.Model.extend({ });
+
+var Players = Backbone.Collection.extend({
+    model: PlayerModel
+});
+
 function fetchPlayers() {
-    return [
-        {
-            name: "Brian",
-            turns: [0, -1, 5]
-        },
+    return new Players([
+        { name: "Brian" },
         { name: "Rebecca" },
         { name: "Finn" },
         { name: "Dottie" }
-    ];
+    ]);
 }
 
 module.exports = React.createClass({
     getInitialState: function () {
-        return { players: fetchPlayers(), newPlayerName: "" };
+        return { players: fetchPlayers() };
     },
-    handlePlayerNameChange: function (event) {
-        this.setState({ newPlayerName: event.target.value });
+
+    componentDidMount: function () {
+        this.state.players.on("add", function () {
+            this.setState({ players: this.state.players });
+        }.bind(this));
     },
-    addPlayer: function () {
-        if (this.state.newPlayerName) {
-            this.setState({ players: this.state.players.concat([{ name: this.state.newPlayerName }]) });
+
+    addPlayer: function (event) {
+        event.preventDefault();
+
+        // Find a cleaner way to do this
+        var newPlayerName = event.target.parentNode.querySelector("input").value;
+
+        if (newPlayerName) {
+            this.state.players.push({ name: newPlayerName });
         }
-        this.setState({ newPlayerName: "" });
+
         return false;
     },
+
     render: function () {
+        console.log("player list render");
         var players = this.state.players.map(function (player) {
             return (
-                <Player name={player.name} turns={player.turns} />
+                <Player key={player.cid} player={player} />
             );
         });
 
@@ -40,7 +55,10 @@ module.exports = React.createClass({
             <div className="app">
                 <h1>Keep Score</h1>
                 <form onSubmit={this.addPlayer}>
-                    <input type="text" className="name" value={this.state.newPlayerName} onChange={this.handlePlayerNameChange} onBlur={this.addPlayer} />
+                    <input type="text"
+                           className="name"
+                           value={this.state.newPlayerName}
+                           onChange={this.handlePlayerNameChange} />
                     <button className="add-player-btn" onClick={this.addPlayer}>+ ADD PLAYER</button>
                 </form>
                 {players}

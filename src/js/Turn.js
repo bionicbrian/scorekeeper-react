@@ -7,12 +7,12 @@ module.exports = React.createClass({
     getInitialState: function () {
         return {
             isEditing: false,
-            // amount: this.props.initialAmount
+            amount: this.props.initialAmount || 0
         };
     },
 
     componentWillMount: function () {
-        console.log(this.props.updateTotalPoints);
+        console.log(this.props.amount);
     },
 
     toggleEditing: function () {
@@ -27,7 +27,7 @@ module.exports = React.createClass({
     },
 
     updateValue: function (event) {
-        this.props.updateTurn(this.props.key, +event.target.value);
+        this.props.updateTurn(+event.target.value);
     },
 
     render: function () {
@@ -41,7 +41,7 @@ module.exports = React.createClass({
             <div className={classes}>
                 <span className="amount-value">{this.state.amount}</span>
                 <form onSubmit={this.toggleEditing}>
-                    <input value={this.props.initialAmount} onChange={this.updateTurn} ref="turnInput" />
+                    <input value={this.state.amount} onChange={this.updateTurn} ref="turnInput" />
                 </form>
                 <button onClick={this.toggleEditing}>{this.state.isEditing ? "SAVE" : "EDIT"}</button>
                 <button onClick={this.deleteTurn}>DELETE</button>
