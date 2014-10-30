@@ -1,14 +1,8 @@
 /** @jsx React.DOM */
 
-var Backbone = require("backbone");
 var React = require("react");
 var Player = require("./Player");
-
-var PlayerModel = Backbone.Model.extend({ });
-
-var Players = Backbone.Collection.extend({
-    model: PlayerModel
-});
+var Players = require("./model/Players");
 
 function fetchPlayers() {
     return new Players([
@@ -26,7 +20,7 @@ module.exports = React.createClass({
 
     componentDidMount: function () {
         this.state.players.on("add", function () {
-            this.setState({ players: this.state.players });
+            this.forceUpdate();
         }.bind(this));
     },
 
@@ -37,7 +31,7 @@ module.exports = React.createClass({
         var newPlayerName = event.target.parentNode.querySelector("input").value;
 
         if (newPlayerName) {
-            this.state.players.push({ name: newPlayerName });
+            this.state.players.add({ name: newPlayerName });
         }
 
         return false;

@@ -3,7 +3,6 @@
 var Backbone = require("backbone");
 var React = require("react/addons");
 var Turn = require("./Turn");
-var TurnModel = Backbone.Model.extend({ });
 
 // Player
 module.exports = React.createClass({
@@ -12,15 +11,15 @@ module.exports = React.createClass({
             isShowingTurns: false,
             showOrHide: "Show",
             isScoring: false,
-            totalPoints: 0,
             isEditing: false,
             increment: 0,
-            turns: this.props.turns || []
         };
     },
 
     componentWillMount: function () {
-        this.updateTotalPoints();
+        this.props.player.on("change", function () {
+            this.forceUpdate();
+        }.bind(this))
     },
 
     scoringTimeout: null,
@@ -31,16 +30,12 @@ module.exports = React.createClass({
         this.setState({ showOrHide: this.state.showOrHide === "Show" ? "Hide" : "Show" });
     },
 
-    deleteTurn: function (todo) {
-        var newTurns = this.state.turns.filter(function (turn) { return id !== turn.id; });
-        this.setState({ turns: newTurns });
-
-        if (!this.state.turns.length) {
-            this.setState({ isShowingTurns: false });
-        }
+    deleteTurn: function (turn) {
+        this.props.player.get("turns").remove(turn);
     },
 
     markIt: function (val) {
+        console.log("markIt was called with val " + val);
         this.setState({ increment: this.state.increment + val });
         this.setState({ isScoring: true });
 
@@ -51,46 +46,34 @@ module.exports = React.createClass({
     },
 
     addTurn: function () {
-        // var newTurn = new TurnModel({ amount: +this.state.increment });
-        this.setState({ turns: this.state.turns.concat([{ initialAmount: +this.state.increment }]) });
+        this.props.player.get("turns").add({ amount: +this.state.increment });
         this.setState({ isScoring: false });
         this.setState({ increment: 0 });
-        this.updateTotalPoints();
     },
 
-    updateTurn: function (turn, value) {
-        this.deleteTurn(turn);
-        this.setState({ turns: this.state.turns.concat([value]) });
-    },
-
-    updateTotalPoints: function () {
-        var totalPoints = this.state.turns.reduce(function (first, second) {
-            return first.amount + second.amount;
-        }, 0);
-
-        this.setState({ totalPoints: totalPoints });
-    },
-
-    shouldComponentUpdate: function(nextProps, nextState) {
-        return nextProps.cid !== this.props.cid;
-    },
+    // shouldComponentUpdate: function(nextProps, nextState) {
+    //     return nextProps.cid !== this.props.cid;
+    // },
 
     render: function () {
-        console.log("Player render called for " + this.props.player.cid);
+        var turnsComponents = [];
+        var operator = "+";
+        var increment = "";
 
-        var turnsComponents = []; var operator = "+"; var increment = "";
+        var turns = this.props.player.get("turns");
+        var score = this.props.player.get("score");
 
         if (this.state.isScoring) {
             operator = this.state.increment < 0 ? "-" : "+";
             increment = operator + " " + Math.abs(this.state.increment);
         }
 
-        if (this.state.turns) {
+        if (turns.length > 0) {
             if (this.state.isShowingTurns) {
                 var that = this;
-                turnsComponents = this.state.turns.map(function (turn, index) {
+                turnsComponents = turns.map(function (turn) {
                     return (
-                        <Turn initialAmount={turn} key={index} updateTotalPoints={this.updateTotalPoints.bind(this, turn)} deleteTurn={that.deleteTurn} />
+                        <Turn turn={turn} key={turn.cid} deleteTurn={that.deleteTurn.bind(that, turn)} />
                     );
                 });
             }
@@ -102,7 +85,7 @@ module.exports = React.createClass({
                     <div className="name-and-score">
                         <h2>{this.props.player.get("name")}</h2>
                         <div className="score">
-                            <h2>{this.state.totalPoints} {increment} <span className={"turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}><span className="for">FOR</span> {this.state.turns.length}</span></h2>
+                            <h2>{score} {increment} <span className={"turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}><span className="for">FOR</span> {turns.length}</span></h2>
                         </div>
                     </div>
                     <div className="score-buttons">
@@ -110,7 +93,7 @@ module.exports = React.createClass({
                         <button onClick={this.markIt.bind(this, 0)}>0</button>
                         <button onClick={this.markIt.bind(this, 1)}>+</button>
                     </div>
-                    <div className={"turns-link" + (this.state.turns.length > 0 ? " is-showing" : "")}>
+                    <div className={"turns-link" + (turns.length > 0 ? " is-showing" : "")}>
                         <button onClick={this.toggleTurns}>{this.state.showOrHide} turns</button>
                     </div>
                 </div>

@@ -23482,7 +23482,6 @@ module.exports = require('./lib/React');
 var Backbone = require("backbone");
 var React = require("react/addons");
 var Turn = require("./Turn");
-var TurnModel = Backbone.Model.extend({ });
 
 // Player
 module.exports = React.createClass({displayName: 'exports',
@@ -23491,15 +23490,15 @@ module.exports = React.createClass({displayName: 'exports',
             isShowingTurns: false,
             showOrHide: "Show",
             isScoring: false,
-            totalPoints: 0,
             isEditing: false,
             increment: 0,
-            turns: this.props.turns || []
         };
     },
 
     componentWillMount: function () {
-        this.updateTotalPoints();
+        this.props.player.on("change", function () {
+            this.forceUpdate();
+        }.bind(this))
     },
 
     scoringTimeout: null,
@@ -23510,16 +23509,12 @@ module.exports = React.createClass({displayName: 'exports',
         this.setState({ showOrHide: this.state.showOrHide === "Show" ? "Hide" : "Show" });
     },
 
-    deleteTurn: function (todo) {
-        var newTurns = this.state.turns.filter(function (turn) { return id !== turn.id; });
-        this.setState({ turns: newTurns });
-
-        if (!this.state.turns.length) {
-            this.setState({ isShowingTurns: false });
-        }
+    deleteTurn: function (turn) {
+        this.props.player.get("turns").remove(turn);
     },
 
     markIt: function (val) {
+        console.log("markIt was called with val " + val);
         this.setState({ increment: this.state.increment + val });
         this.setState({ isScoring: true });
 
@@ -23530,46 +23525,34 @@ module.exports = React.createClass({displayName: 'exports',
     },
 
     addTurn: function () {
-        // var newTurn = new TurnModel({ amount: +this.state.increment });
-        this.setState({ turns: this.state.turns.concat([{ initialAmount: +this.state.increment }]) });
+        this.props.player.get("turns").add({ amount: +this.state.increment });
         this.setState({ isScoring: false });
         this.setState({ increment: 0 });
-        this.updateTotalPoints();
     },
 
-    updateTurn: function (turn, value) {
-        this.deleteTurn(turn);
-        this.setState({ turns: this.state.turns.concat([value]) });
-    },
-
-    updateTotalPoints: function () {
-        var totalPoints = this.state.turns.reduce(function (first, second) {
-            return first.amount + second.amount;
-        }, 0);
-
-        this.setState({ totalPoints: totalPoints });
-    },
-
-    shouldComponentUpdate: function(nextProps, nextState) {
-        return nextProps.cid !== this.props.cid;
-    },
+    // shouldComponentUpdate: function(nextProps, nextState) {
+    //     return nextProps.cid !== this.props.cid;
+    // },
 
     render: function () {
-        console.log("Player render called for " + this.props.player.cid);
+        var turnsComponents = [];
+        var operator = "+";
+        var increment = "";
 
-        var turnsComponents = []; var operator = "+"; var increment = "";
+        var turns = this.props.player.get("turns");
+        var score = this.props.player.get("score");
 
         if (this.state.isScoring) {
             operator = this.state.increment < 0 ? "-" : "+";
             increment = operator + " " + Math.abs(this.state.increment);
         }
 
-        if (this.state.turns) {
+        if (turns.length > 0) {
             if (this.state.isShowingTurns) {
                 var that = this;
-                turnsComponents = this.state.turns.map(function (turn, index) {
+                turnsComponents = turns.map(function (turn) {
                     return (
-                        Turn({initialAmount: turn, key: index, updateTotalPoints: this.updateTotalPoints.bind(this, turn), deleteTurn: that.deleteTurn})
+                        Turn({turn: turn, key: turn.cid, deleteTurn: that.deleteTurn.bind(that, turn)})
                     );
                 });
             }
@@ -23581,7 +23564,7 @@ module.exports = React.createClass({displayName: 'exports',
                     React.DOM.div({className: "name-and-score"}, 
                         React.DOM.h2(null, this.props.player.get("name")), 
                         React.DOM.div({className: "score"}, 
-                            React.DOM.h2(null, this.state.totalPoints, " ", increment, " ", React.DOM.span({className: "turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}, React.DOM.span({className: "for"}, "FOR"), " ", this.state.turns.length))
+                            React.DOM.h2(null, score, " ", increment, " ", React.DOM.span({className: "turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}, React.DOM.span({className: "for"}, "FOR"), " ", turns.length))
                         )
                     ), 
                     React.DOM.div({className: "score-buttons"}, 
@@ -23589,7 +23572,7 @@ module.exports = React.createClass({displayName: 'exports',
                         React.DOM.button({onClick: this.markIt.bind(this, 0)}, "0"), 
                         React.DOM.button({onClick: this.markIt.bind(this, 1)}, "+")
                     ), 
-                    React.DOM.div({className: "turns-link" + (this.state.turns.length > 0 ? " is-showing" : "")}, 
+                    React.DOM.div({className: "turns-link" + (turns.length > 0 ? " is-showing" : "")}, 
                         React.DOM.button({onClick: this.toggleTurns}, this.state.showOrHide, " turns")
                     )
                 ), 
@@ -23604,15 +23587,9 @@ module.exports = React.createClass({displayName: 'exports',
 },{"./Turn":167,"backbone":2,"react/addons":4}],166:[function(require,module,exports){
 /** @jsx React.DOM */
 
-var Backbone = require("backbone");
 var React = require("react");
 var Player = require("./Player");
-
-var PlayerModel = Backbone.Model.extend({ });
-
-var Players = Backbone.Collection.extend({
-    model: PlayerModel
-});
+var Players = require("./model/Players");
 
 function fetchPlayers() {
     return new Players([
@@ -23630,7 +23607,7 @@ module.exports = React.createClass({displayName: 'exports',
 
     componentDidMount: function () {
         this.state.players.on("add", function () {
-            this.setState({ players: this.state.players });
+            this.forceUpdate();
         }.bind(this));
     },
 
@@ -23641,7 +23618,7 @@ module.exports = React.createClass({displayName: 'exports',
         var newPlayerName = event.target.parentNode.querySelector("input").value;
 
         if (newPlayerName) {
-            this.state.players.push({ name: newPlayerName });
+            this.state.players.add({ name: newPlayerName });
         }
 
         return false;
@@ -23671,22 +23648,25 @@ module.exports = React.createClass({displayName: 'exports',
     }
 });
 
-},{"./Player":165,"backbone":2,"react":163}],167:[function(require,module,exports){
+},{"./Player":165,"./model/Players":169,"react":163}],167:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require("react/addons");
 
 // Turn
+// props are:
+// turn: the model
+// key: turn.cid
+// deleteTurn: collection remove method bound to this turn
 module.exports = React.createClass({displayName: 'exports',
     getInitialState: function () {
-        return {
-            isEditing: false,
-            amount: this.props.initialAmount || 0
-        };
+        return { isEditing: false };
     },
 
     componentWillMount: function () {
-        console.log(this.props.amount);
+        this.props.turn.on("change", function () {
+            this.forceUpdate();
+        }.bind(this));
     },
 
     toggleEditing: function () {
@@ -23697,11 +23677,11 @@ module.exports = React.createClass({displayName: 'exports',
     },
 
     deleteTurn: function () {
-        this.props.deleteTurn(this.props.key);
+        this.props.deleteTurn();
     },
 
     updateValue: function (event) {
-        this.props.updateTurn(+event.target.value);
+        this.props.turn.set("amount", +event.target.value);
     },
 
     render: function () {
@@ -23713,7 +23693,7 @@ module.exports = React.createClass({displayName: 'exports',
 
         return (
             React.DOM.div({className: classes}, 
-                React.DOM.span({className: "amount-value"}, this.state.amount), 
+                React.DOM.span({className: "amount-value"}, this.props.turn.get("amount")), 
                 React.DOM.form({onSubmit: this.toggleEditing}, 
                     React.DOM.input({value: this.state.amount, onChange: this.updateTurn, ref: "turnInput"})
                 ), 
@@ -23724,4 +23704,56 @@ module.exports = React.createClass({displayName: 'exports',
     }
 });
 
-},{"react/addons":4}]},{},[1]);
+},{"react/addons":4}],168:[function(require,module,exports){
+"use strict";
+
+var _ = require("underscore");
+var Backbone = require("backbone");
+var Turns = require("./Turns");
+
+// Player model
+module.exports = Backbone.Model.extend({
+  initialize: function () {
+    this.set("turns", new Turns([]));
+    this.get("turns").on("add", _.debounce(this.setScore.bind(this), 10));
+    this.setScore();
+  },
+
+  setScore: function () {
+    var score = this.get("turns").reduce(function (one, two) {
+        return one + two.get("amount");
+    }, 0);
+
+    this.set("score", score);
+  }
+});
+
+},{"./Turns":171,"backbone":2,"underscore":164}],169:[function(require,module,exports){
+"use strict";
+
+var Backbone = require("backbone");
+var Player = require("./Player");
+
+// Players collection
+module.exports = Backbone.Collection.extend({
+      model: Player
+});
+
+},{"./Player":168,"backbone":2}],170:[function(require,module,exports){
+"use strict";
+
+var Backbone = require("backbone");
+
+module.exports = Backbone.Model.extend({});
+
+},{"backbone":2}],171:[function(require,module,exports){
+"use strict";
+
+var Backbone = require("backbone");
+var Turn = require("./Turn");
+
+module.exports = Backbone.Collection.extend({
+    model: Turn
+});
+
+},{"./Turn":170,"backbone":2}]},{},[1]);

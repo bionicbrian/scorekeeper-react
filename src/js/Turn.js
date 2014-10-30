@@ -3,16 +3,19 @@
 var React = require("react/addons");
 
 // Turn
+// props are:
+// turn: the model
+// key: turn.cid
+// deleteTurn: collection remove method bound to this turn
 module.exports = React.createClass({
     getInitialState: function () {
-        return {
-            isEditing: false,
-            amount: this.props.initialAmount || 0
-        };
+        return { isEditing: false };
     },
 
     componentWillMount: function () {
-        console.log(this.props.amount);
+        this.props.turn.on("change", function () {
+            this.forceUpdate();
+        }.bind(this));
     },
 
     toggleEditing: function () {
@@ -23,11 +26,11 @@ module.exports = React.createClass({
     },
 
     deleteTurn: function () {
-        this.props.deleteTurn(this.props.key);
+        this.props.deleteTurn();
     },
 
     updateValue: function (event) {
-        this.props.updateTurn(+event.target.value);
+        this.props.turn.set("amount", +event.target.value);
     },
 
     render: function () {
@@ -39,7 +42,7 @@ module.exports = React.createClass({
 
         return (
             <div className={classes}>
-                <span className="amount-value">{this.state.amount}</span>
+                <span className="amount-value">{this.props.turn.get("amount")}</span>
                 <form onSubmit={this.toggleEditing}>
                     <input value={this.state.amount} onChange={this.updateTurn} ref="turnInput" />
                 </form>
