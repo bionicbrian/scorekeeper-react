@@ -17,9 +17,13 @@ module.exports = React.createClass({
     },
 
     componentWillMount: function () {
+        var that = this;
         this.props.player.on("change", function () {
-            this.forceUpdate();
-        }.bind(this))
+            that.forceUpdate();
+        });
+        this.props.player.get("turns").on("remove", function () {
+            that.forceUpdate();
+        });
     },
 
     scoringTimeout: null,
@@ -31,7 +35,12 @@ module.exports = React.createClass({
     },
 
     deleteTurn: function (turn) {
+        console.log("gonna delete a turn");
         this.props.player.get("turns").remove(turn);
+
+        if (this.props.player.get("turns").length < 1) {
+            this.setState({ isShowingTurns: false });
+        }
     },
 
     markIt: function (val) {

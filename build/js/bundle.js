@@ -23496,9 +23496,13 @@ module.exports = React.createClass({displayName: 'exports',
     },
 
     componentWillMount: function () {
+        var that = this;
         this.props.player.on("change", function () {
-            this.forceUpdate();
-        }.bind(this))
+            that.forceUpdate();
+        });
+        this.props.player.get("turns").on("remove", function () {
+            that.forceUpdate();
+        });
     },
 
     scoringTimeout: null,
@@ -23510,7 +23514,12 @@ module.exports = React.createClass({displayName: 'exports',
     },
 
     deleteTurn: function (turn) {
+        console.log("gonna delete a turn");
         this.props.player.get("turns").remove(turn);
+
+        if (this.props.player.get("turns").length < 1) {
+            this.setState({ isShowingTurns: false });
+        }
     },
 
     markIt: function (val) {
@@ -23713,21 +23722,22 @@ var Turns = require("./Turns");
 
 // Player model
 module.exports = Backbone.Model.extend({
-  initialize: function () {
-    var setScore = _.debounce(this.setScore.bind(this), 10);
-    this.set("turns", new Turns([]));
-    this.get("turns").on("add", setScore);
-    this.get("turns").on("change", setScore);
-    this.setScore();
-  },
+    initialize: function () {
+        var setScore = _.debounce(this.setScore.bind(this), 10);
+        this.set("turns", new Turns([]));
+        this.get("turns").on("add", setScore);
+        this.get("turns").on("change", setScore);
+        this.get("turns").on("remove", setScore);
+        this.setScore();
+    },
 
-  setScore: function () {
-    var score = this.get("turns").reduce(function (one, two) {
-        return one + two.get("amount");
-    }, 0);
+    setScore: function () {
+        var score = this.get("turns").reduce(function (one, two) {
+            return one + two.get("amount");
+        }, 0);
 
-    this.set("score", score);
-  }
+        this.set("score", score);
+    }
 });
 
 },{"./Turns":171,"backbone":2,"underscore":164}],169:[function(require,module,exports){
@@ -23756,7 +23766,12 @@ var Backbone = require("backbone");
 var Turn = require("./Turn");
 
 module.exports = Backbone.Collection.extend({
-    model: Turn
+    model: Turn,
+    intialize: function () {
+        this.on("remove", function () {
+            console.log("someone tried to remove a turn");
+        });
+    }
 });
 
 },{"./Turn":170,"backbone":2}]},{},[1]);
