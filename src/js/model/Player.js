@@ -7,8 +7,10 @@ var Turns = require("./Turns");
 // Player model
 module.exports = Backbone.Model.extend({
   initialize: function () {
+    var setScore = _.debounce(this.setScore.bind(this), 10);
     this.set("turns", new Turns([]));
-    this.get("turns").on("add", _.debounce(this.setScore.bind(this), 10));
+    this.get("turns").on("add", setScore);
+    this.get("turns").on("change", setScore);
     this.setScore();
   },
 

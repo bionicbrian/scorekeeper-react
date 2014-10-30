@@ -23680,7 +23680,7 @@ module.exports = React.createClass({displayName: 'exports',
         this.props.deleteTurn();
     },
 
-    updateValue: function (event) {
+    updateAmount: function (event) {
         this.props.turn.set("amount", +event.target.value);
     },
 
@@ -23695,7 +23695,7 @@ module.exports = React.createClass({displayName: 'exports',
             React.DOM.div({className: classes}, 
                 React.DOM.span({className: "amount-value"}, this.props.turn.get("amount")), 
                 React.DOM.form({onSubmit: this.toggleEditing}, 
-                    React.DOM.input({value: this.state.amount, onChange: this.updateTurn, ref: "turnInput"})
+                    React.DOM.input({value: this.props.turn.get("amount"), onChange: this.updateAmount, ref: "turnInput"})
                 ), 
                 React.DOM.button({onClick: this.toggleEditing}, this.state.isEditing ? "SAVE" : "EDIT"), 
                 React.DOM.button({onClick: this.deleteTurn}, "DELETE")
@@ -23714,8 +23714,10 @@ var Turns = require("./Turns");
 // Player model
 module.exports = Backbone.Model.extend({
   initialize: function () {
+    var setScore = _.debounce(this.setScore.bind(this), 10);
     this.set("turns", new Turns([]));
-    this.get("turns").on("add", _.debounce(this.setScore.bind(this), 10));
+    this.get("turns").on("add", setScore);
+    this.get("turns").on("change", setScore);
     this.setScore();
   },
 
@@ -23736,7 +23738,8 @@ var Player = require("./Player");
 
 // Players collection
 module.exports = Backbone.Collection.extend({
-      model: Player
+    model: Player
+
 });
 
 },{"./Player":168,"backbone":2}],170:[function(require,module,exports){

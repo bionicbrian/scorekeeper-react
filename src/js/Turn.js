@@ -29,7 +29,7 @@ module.exports = React.createClass({
         this.props.deleteTurn();
     },
 
-    updateValue: function (event) {
+    updateAmount: function (event) {
         this.props.turn.set("amount", +event.target.value);
     },
 
@@ -44,7 +44,7 @@ module.exports = React.createClass({
             <div className={classes}>
                 <span className="amount-value">{this.props.turn.get("amount")}</span>
                 <form onSubmit={this.toggleEditing}>
-                    <input value={this.state.amount} onChange={this.updateTurn} ref="turnInput" />
+                    <input value={this.props.turn.get("amount")} onChange={this.updateAmount} ref="turnInput" />
                 </form>
                 <button onClick={this.toggleEditing}>{this.state.isEditing ? "SAVE" : "EDIT"}</button>
                 <button onClick={this.deleteTurn}>DELETE</button>
