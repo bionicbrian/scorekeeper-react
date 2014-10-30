@@ -18,12 +18,14 @@ module.exports = React.createClass({
 
     componentWillMount: function () {
         var that = this;
-        this.props.player.on("change", function () {
+
+        function forceUpdate() {
             that.forceUpdate();
-        });
-        this.props.player.get("turns").on("remove", function () {
-            that.forceUpdate();
-        });
+        }
+
+        this.props.player.on("change", forceUpdate);
+        this.props.player.get("turns").on("add", forceUpdate);
+        this.props.player.get("turns").on("remove", forceUpdate);
     },
 
     scoringTimeout: null,
