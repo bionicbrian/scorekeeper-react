@@ -1,5 +1,6 @@
 /** @jsx React.DOM */
 
+var _ = require("underscore");
 var React = require("react/addons");
 var PlayerActions = require("./actions/PlayerActions");
 
@@ -21,9 +22,11 @@ module.exports = React.createClass({
     },
 
     updateTurnValue: function (event) {
+        var newVal = +event.target.value;
+        newVal = _.isNumber(newVal) && !_.isNaN(newVal) ? newVal : 0;
         PlayerActions.updateTurn({ playerId: this.props.playerId,
                                    turnId: this.props.turn.id,
-                                   newValue: +event.target.value });
+                                   newValue: newVal });
     },
 
     render: function () {
@@ -33,11 +36,13 @@ module.exports = React.createClass({
             "is-editing": this.state.isEditing
         });
 
+        var value = this.props.turn.value;
+
         return (
             <div className={classes}>
-                <span className="amount-value">{this.props.turn.value}</span>
+                <span className="amount-value">{value}</span>
                 <form onSubmit={this.toggleEditing}>
-                    <input value={this.props.turn.value} onChange={this.updateTurnValue} ref="turnInput" />
+                    <input value={value} onChange={this.updateTurnValue} ref="turnInput" />
                 </form>
                 <button onClick={this.toggleEditing}>{this.state.isEditing ? "SAVE" : "EDIT"}</button>
                 <button onClick={this.deleteTurn}>DELETE</button>

@@ -25,11 +25,14 @@ module.exports = React.createClass({
     addPlayer: function (event) {
         event.preventDefault();
 
+        var inputEl = event.target.parentNode.querySelector("input");
+
         // Find a cleaner way to do this
-        var newPlayerName = event.target.parentNode.querySelector("input").value;
+        var newPlayerName = inputEl.value;
 
         if (newPlayerName) {
             PlayerActions.add({ name: newPlayerName });
+            inputEl.value = "";
         }
 
         return false;
