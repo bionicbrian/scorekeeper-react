@@ -1,21 +1,12 @@
 /** @jsx React.DOM */
 
 var React = require("react/addons");
+var PlayerActions = require("./actions/PlayerActions");
 
 // Turn
-// props are:
-// turn: the model
-// key: turn.cid
-// deleteTurn: collection remove method bound to this turn
 module.exports = React.createClass({
     getInitialState: function () {
         return { isEditing: false };
-    },
-
-    componentWillMount: function () {
-        this.props.turn.on("change", function () {
-            this.forceUpdate();
-        }.bind(this));
     },
 
     toggleEditing: function () {
@@ -26,11 +17,13 @@ module.exports = React.createClass({
     },
 
     deleteTurn: function () {
-        this.props.deleteTurn();
+        PlayerActions.removeTurn({ id: this.props.turn.id });
     },
 
-    updateAmount: function (event) {
-        this.props.turn.set("amount", +event.target.value);
+    updateTurnValue: function (event) {
+        PlayerActions.updateTurn({ playerId: this.props.playerId,
+                                   turnId: this.props.turn.id,
+                                   newValue: +event.target.value });
     },
 
     render: function () {
@@ -42,9 +35,9 @@ module.exports = React.createClass({
 
         return (
             <div className={classes}>
-                <span className="amount-value">{this.props.turn.get("amount")}</span>
+                <span className="amount-value">{this.props.turn.value}</span>
                 <form onSubmit={this.toggleEditing}>
-                    <input value={this.props.turn.get("amount")} onChange={this.updateAmount} ref="turnInput" />
+                    <input value={this.props.turn.value} onChange={this.updateTurnValue} ref="turnInput" />
                 </form>
                 <button onClick={this.toggleEditing}>{this.state.isEditing ? "SAVE" : "EDIT"}</button>
                 <button onClick={this.deleteTurn}>DELETE</button>

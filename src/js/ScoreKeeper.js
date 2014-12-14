@@ -2,26 +2,24 @@
 
 var React = require("react");
 var Player = require("./Player");
-var Players = require("./model/Players");
-
-function fetchPlayers() {
-    return new Players([
-        { name: "Brian" },
-        { name: "Rebecca" },
-        { name: "Finn" },
-        { name: "Dottie" }
-    ]);
-}
+var PlayerActions = require("./actions/PlayerActions");
+var Store = require("./store/ScoreKeeper");
 
 module.exports = React.createClass({
     getInitialState: function () {
-        return { players: fetchPlayers() };
+        return { players: Store.getPlayers() };
+    },
+
+    updatePlayers: function () {
+        this.setState({ players: Store.getPlayers() });
     },
 
     componentDidMount: function () {
-        this.state.players.on("add", function () {
-            this.forceUpdate();
-        }.bind(this));
+        Store.addListener("CHANGE", this.updatePlayers);
+    },
+
+    componentWillUnmount: function () {
+        Store.removeListener("CHANGE", this.updatePlayers);
     },
 
     addPlayer: function (event) {
@@ -31,28 +29,22 @@ module.exports = React.createClass({
         var newPlayerName = event.target.parentNode.querySelector("input").value;
 
         if (newPlayerName) {
-            this.state.players.add({ name: newPlayerName });
+            PlayerActions.add({ name: newPlayerName });
         }
 
         return false;
     },
 
     render: function () {
-        console.log("player list render");
         var players = this.state.players.map(function (player) {
-            return (
-                <Player key={player.cid} player={player} />
-            );
+            return (<Player key={player.id} player={player} />);
         });
 
         return (
             <div className="app">
                 <h1>Keep Score</h1>
                 <form onSubmit={this.addPlayer}>
-                    <input type="text"
-                           className="name"
-                           value={this.state.newPlayerName}
-                           onChange={this.handlePlayerNameChange} />
+                    <input type="text" className="name" />
                     <button className="add-player-btn" onClick={this.addPlayer}>+ ADD PLAYER</button>
                 </form>
                 {players}
