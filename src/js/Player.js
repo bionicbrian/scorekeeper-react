@@ -16,6 +16,12 @@ module.exports = React.createClass({
         };
     },
 
+    componentWillReceiveProps: function () {
+        if (this.props.player.turns.length < 1) {
+            this.setState({ isShowingTurns: false });
+        }
+    },
+
     scoringTimeout: null,
     pointValues: [0, 1, -1],
 
