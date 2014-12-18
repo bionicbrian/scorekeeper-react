@@ -18,7 +18,7 @@ module.exports = React.createClass({
     },
 
     deleteTurn: function () {
-        PlayerActions.removeTurn({ id: this.props.turn.id });
+        PlayerActions.removeTurn({ playerId: this.props.playerId, turnId: this.props.turn.id });
     },
 
     updateTurnValue: function (event) {

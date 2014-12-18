@@ -15,7 +15,7 @@ function addPlayer(data) {
 
 function removePlayer(data) {
     var newPlayers = _.reject(players, function (player) {
-        player.id === data.id;
+        return player.id === data.id;
     });
     players = newPlayers;
 }
@@ -39,6 +39,14 @@ function updateTurn(data) {
     var player = _.findWhere(players, { id: data.playerId });
     var turn = _.findWhere(player.turns, { id: data.turnId });
     turn.value = data.newValue;
+}
+
+function removeTurn(data) {
+    var player = _.findWhere(players, { id: data.playerId });
+    var newTurns = _.reject(player.turns, function (turn) {
+        return turn.id === data.turnId;
+    });
+    player.turns = newTurns;
 }
 
 function getPlayers() {
@@ -72,6 +80,9 @@ AppDispatcher.register(function (payload) {
             break;
         case Cons.UPDATE_TURN:
             updateTurn(payload.data);
+            break;
+        case Cons.REMOVE_TURN:
+            removeTurn(payload.data);
             break;
         default:
             break;

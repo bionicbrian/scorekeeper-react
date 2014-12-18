@@ -38,5 +38,12 @@ module.exports = {
             type: Cons.UPDATE_TURN,
             data: data
         });
+    },
+
+    removeTurn: function (data) {
+        AppDispatcher.handle({
+            type: Cons.REMOVE_TURN,
+            data: data
+        });
     }
 };
