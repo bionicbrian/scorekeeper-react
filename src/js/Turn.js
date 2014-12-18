@@ -7,7 +7,14 @@ var PlayerActions = require("./actions/PlayerActions");
 // Turn
 module.exports = React.createClass({
     getInitialState: function () {
-        return { isEditing: false };
+        return {
+            isEditing: false,
+            amount: this.props.turn.value
+        };
+    },
+
+    componentWillReceiveProps: function (newProps) {
+        this.setState({ amount: this.props.turn.value });
     },
 
     toggleEditing: function () {
@@ -15,6 +22,8 @@ module.exports = React.createClass({
         if (this.state.isEditing) {
             this.refs.turnInput.getDOMNode().focus();
         }
+
+        this.setState({ amount: this.props.turn.value });
     },
 
     deleteTurn: function () {
@@ -22,11 +31,15 @@ module.exports = React.createClass({
     },
 
     updateTurnValue: function (event) {
-        var newVal = +event.target.value;
-        newVal = _.isNumber(newVal) && !_.isNaN(newVal) ? newVal : 0;
-        PlayerActions.updateTurn({ playerId: this.props.playerId,
-                                   turnId: this.props.turn.id,
-                                   newValue: newVal });
+        var newVal = event.target.value;
+
+        if (!_.isNumber(+newVal) || _.isNaN(+newVal) || newVal === "") {
+            this.setState({ amount: newVal });
+        } else {
+            PlayerActions.updateTurn({ playerId: this.props.playerId,
+                                       turnId: this.props.turn.id,
+                                       newValue: +newVal });
+        }
     },
 
     render: function () {
@@ -36,7 +49,7 @@ module.exports = React.createClass({
             "is-editing": this.state.isEditing
         });
 
-        var value = this.props.turn.value;
+        var value = this.state.amount;
 
         return (
             <div className={classes}>
