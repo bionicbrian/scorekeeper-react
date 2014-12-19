@@ -17,7 +17,9 @@ module.exports = React.createClass({
         this.setState({ amount: this.props.turn.value });
     },
 
-    toggleEditing: function () {
+    toggleEditing: function (event) {
+        event.preventDefault();
+
         this.setState({ isEditing: !this.state.isEditing });
         if (this.state.isEditing) {
             this.refs.turnInput.getDOMNode().focus();
