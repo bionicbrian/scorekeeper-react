@@ -2,9 +2,16 @@
 
 var EventEmitter = require("events").EventEmitter;
 var _ = require("underscore");
-var Cons = require("../Constants");
+var enums = require("../utils/enums");
 var AppDispatcher = require("../AppDispatcher");
+var games = [];
 var players = [];
+
+function addGame(data) {
+    var id = _.uniqueId("game_");
+    var game = _.extend(data, { id: id });
+    games.push(game);
+}
 
 function addPlayer(data) {
     var id = _.uniqueId("player_");
@@ -53,43 +60,48 @@ function getPlayers() {
     return players;
 }
 
-var Store = (function () {
-    function F() {}
-    F.prototype = EventEmitter.prototype;
-    F.prototype.getPlayers = getPlayers;
-    return new F();
-}());
+function getGames() {
+    return games;
+}
 
-var Store = new EventEmitter();
+function Store() { }
+Store.prototype = Object.create(EventEmitter.prototype);
+Store.prototype.getPlayers = getPlayers;
+Store.prototype.getGames = getGames;
+
+var store = new Store();
 
 AppDispatcher.register(function (payload) {
     var type = payload.type;
 
     switch (type) {
-        case Cons.UPDATE_PLAYER:
+        case enums.ADD_GAME:
+            addGame(payload.data);
+            break;
+        case enums.UPDATE_PLAYER:
             updatePlayer(payload.data);
             break;
-        case Cons.ADD_PLAYER:
+        case enums.ADD_PLAYER:
             addPlayer(payload.data);
             break;
-        case Cons.REMOVE_PLAYER:
+        case enums.REMOVE_PLAYER:
             removePlayer(payload.data);
             break;
-        case Cons.ADD_TURN:
+        case enums.ADD_TURN:
             addTurn(payload.data);
             break;
-        case Cons.UPDATE_TURN:
+        case enums.UPDATE_TURN:
             updateTurn(payload.data);
             break;
-        case Cons.REMOVE_TURN:
+        case enums.REMOVE_TURN:
             removeTurn(payload.data);
             break;
         default:
             break;
     }
 
-    Store.emit("CHANGE");
+    store.emit("CHANGE");
 });
 
-module.exports = Store;
+module.exports = store;
 

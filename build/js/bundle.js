@@ -2,18 +2,18 @@
 /** @jsx React.DOM */
 
 var React = require("react");
-var ScoreKeeper = require("./ScoreKeeper");
+var Game = require("./Game");
 
 window.addEventListener("load", function() {
     new FastClick(document.body);
 }, false);
 
 React.renderComponent(
-    ScoreKeeper(null),
+    Game(null),
     document.getElementById("main")
 );
 
-},{"./ScoreKeeper":168,"react":163}],2:[function(require,module,exports){
+},{"./Game":166,"react":163}],2:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -22187,18 +22187,65 @@ var AppDispatcher = {
 module.exports = AppDispatcher;
 
 },{}],166:[function(require,module,exports){
-"use strict";
+/** @jsx React.DOM */
 
-// CONSTANTS
-module.exports = {
-    UPDATE_PLAYER: 0,
-    ADD_PLAYER: 1,
-    REMOVE_PLAYER: 2,
-    ADD_TURN: 3,
-    UPDATE_TURN: 4
-};
+var React = require("react");
+var Player = require("./Player");
+var PlayerActions = require("./actions/PlayerActions");
+var Store = require("./store/ScoreKeeper");
 
-},{}],167:[function(require,module,exports){
+module.exports = React.createClass({displayName: 'exports',
+    getInitialState: function () {
+        return { players: Store.getPlayers() };
+    },
+
+    updatePlayers: function () {
+        this.setState({ players: Store.getPlayers() });
+    },
+
+    componentDidMount: function () {
+        Store.addListener("CHANGE", this.updatePlayers);
+    },
+
+    componentWillUnmount: function () {
+        Store.removeListener("CHANGE", this.updatePlayers);
+    },
+
+    addPlayer: function (event) {
+        event.preventDefault();
+
+        var inputEl = event.target.parentNode.querySelector("input");
+
+        // Find a cleaner way to do this
+        var newPlayerName = inputEl.value;
+
+        if (newPlayerName) {
+            PlayerActions.add({ name: newPlayerName });
+            inputEl.value = "";
+        }
+
+        return false;
+    },
+
+    render: function () {
+        var players = this.state.players.map(function (player) {
+            return (Player({key: player.id, player: player}));
+        });
+
+        return (
+            React.DOM.div({className: "app"}, 
+                React.DOM.h1(null, "Keep Score"), 
+                React.DOM.form({onSubmit: this.addPlayer}, 
+                    React.DOM.input({type: "text", className: "name"}), 
+                    React.DOM.button({className: "add-player-btn", onClick: this.addPlayer}, "+ ADD PLAYER")
+                ), 
+                players
+            )
+        );
+    }
+});
+
+},{"./Player":167,"./actions/PlayerActions":169,"./store/ScoreKeeper":170,"react":163}],167:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require("react/addons");
@@ -22303,66 +22350,7 @@ module.exports = React.createClass({displayName: 'exports',
     }
 });
 
-},{"./Turn":169,"./actions/PlayerActions":170,"react/addons":4}],168:[function(require,module,exports){
-/** @jsx React.DOM */
-
-var React = require("react");
-var Player = require("./Player");
-var PlayerActions = require("./actions/PlayerActions");
-var Store = require("./store/ScoreKeeper");
-
-module.exports = React.createClass({displayName: 'exports',
-    getInitialState: function () {
-        return { players: Store.getPlayers() };
-    },
-
-    updatePlayers: function () {
-        this.setState({ players: Store.getPlayers() });
-    },
-
-    componentDidMount: function () {
-        Store.addListener("CHANGE", this.updatePlayers);
-    },
-
-    componentWillUnmount: function () {
-        Store.removeListener("CHANGE", this.updatePlayers);
-    },
-
-    addPlayer: function (event) {
-        event.preventDefault();
-
-        var inputEl = event.target.parentNode.querySelector("input");
-
-        // Find a cleaner way to do this
-        var newPlayerName = inputEl.value;
-
-        if (newPlayerName) {
-            PlayerActions.add({ name: newPlayerName });
-            inputEl.value = "";
-        }
-
-        return false;
-    },
-
-    render: function () {
-        var players = this.state.players.map(function (player) {
-            return (Player({key: player.id, player: player}));
-        });
-
-        return (
-            React.DOM.div({className: "app"}, 
-                React.DOM.h1(null, "Keep Score"), 
-                React.DOM.form({onSubmit: this.addPlayer}, 
-                    React.DOM.input({type: "text", className: "name"}), 
-                    React.DOM.button({className: "add-player-btn", onClick: this.addPlayer}, "+ ADD PLAYER")
-                ), 
-                players
-            )
-        );
-    }
-});
-
-},{"./Player":167,"./actions/PlayerActions":170,"./store/ScoreKeeper":171,"react":163}],169:[function(require,module,exports){
+},{"./Turn":168,"./actions/PlayerActions":169,"react/addons":4}],168:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var _ = require("underscore");
@@ -22431,65 +22419,72 @@ module.exports = React.createClass({displayName: 'exports',
     }
 });
 
-},{"./actions/PlayerActions":170,"react/addons":4,"underscore":164}],170:[function(require,module,exports){
+},{"./actions/PlayerActions":169,"react/addons":4,"underscore":164}],169:[function(require,module,exports){
 "use strict";
 
 var AppDispatcher = require("../AppDispatcher");
-var Cons = require("../Constants");
+var enums = require("../utils/enums");
 
 // PlayerActions
 module.exports = {
     add: function (data) {
         AppDispatcher.handle({
-            type: Cons.ADD_PLAYER,
+            type: enums.ADD_PLAYER,
             data: data
         });
     },
 
     update: function (data) {
         AppDispatcher.handle({
-            type: Cons.UPDATE_PLAYER,
+            type: enums.UPDATE_PLAYER,
             data: data
         });
     },
 
     remove: function (data) {
         AppDispatcher.handle({
-            type: Cons.REMOVE_PLAYER,
+            type: enums.REMOVE_PLAYER,
             data: data
         });
     },
 
     addTurn: function (data) {
         AppDispatcher.handle({
-            type: Cons.ADD_TURN,
+            type: enums.ADD_TURN,
             data: data
         });
     },
 
     updateTurn: function (data) {
         AppDispatcher.handle({
-            type: Cons.UPDATE_TURN,
+            type: enums.UPDATE_TURN,
             data: data
         });
     },
 
     removeTurn: function (data) {
         AppDispatcher.handle({
-            type: Cons.REMOVE_TURN,
+            type: enums.REMOVE_TURN,
             data: data
         });
     }
 };
 
-},{"../AppDispatcher":165,"../Constants":166}],171:[function(require,module,exports){
+},{"../AppDispatcher":165,"../utils/enums":171}],170:[function(require,module,exports){
 "use strict";
 
 var EventEmitter = require("events").EventEmitter;
 var _ = require("underscore");
-var Cons = require("../Constants");
+var enums = require("../utils/enums");
 var AppDispatcher = require("../AppDispatcher");
+var games = [];
 var players = [];
+
+function addGame(data) {
+    var id = _.uniqueId("game_");
+    var game = _.extend(data, { id: id });
+    games.push(game);
+}
 
 function addPlayer(data) {
     var id = _.uniqueId("player_");
@@ -22538,45 +22533,63 @@ function getPlayers() {
     return players;
 }
 
-var Store = (function () {
-    function F() {}
-    F.prototype = EventEmitter.prototype;
-    F.prototype.getPlayers = getPlayers;
-    return new F();
-}());
+function getGames() {
+    return games;
+}
 
-var Store = new EventEmitter();
+function Store() { }
+Store.prototype = Object.create(EventEmitter.prototype);
+Store.prototype.getPlayers = getPlayers;
+Store.prototype.getGames = getGames;
+
+var store = new Store();
 
 AppDispatcher.register(function (payload) {
     var type = payload.type;
 
     switch (type) {
-        case Cons.UPDATE_PLAYER:
+        case enums.ADD_GAME:
+            addGame(payload.data);
+            break;
+        case enums.UPDATE_PLAYER:
             updatePlayer(payload.data);
             break;
-        case Cons.ADD_PLAYER:
+        case enums.ADD_PLAYER:
             addPlayer(payload.data);
             break;
-        case Cons.REMOVE_PLAYER:
+        case enums.REMOVE_PLAYER:
             removePlayer(payload.data);
             break;
-        case Cons.ADD_TURN:
+        case enums.ADD_TURN:
             addTurn(payload.data);
             break;
-        case Cons.UPDATE_TURN:
+        case enums.UPDATE_TURN:
             updateTurn(payload.data);
             break;
-        case Cons.REMOVE_TURN:
+        case enums.REMOVE_TURN:
             removeTurn(payload.data);
             break;
         default:
             break;
     }
 
-    Store.emit("CHANGE");
+    store.emit("CHANGE");
 });
 
-module.exports = Store;
+module.exports = store;
 
 
-},{"../AppDispatcher":165,"../Constants":166,"events":2,"underscore":164}]},{},[1]);
+},{"../AppDispatcher":165,"../utils/enums":171,"events":2,"underscore":164}],171:[function(require,module,exports){
+"use strict";
+
+// ENUMS
+module.exports = {
+    UPDATE_PLAYER: 0,
+    ADD_PLAYER: 1,
+    REMOVE_PLAYER: 2,
+    ADD_TURN: 3,
+    UPDATE_TURN: 4,
+    ADD_GAME: 5
+};
+
+},{}]},{},[1]);

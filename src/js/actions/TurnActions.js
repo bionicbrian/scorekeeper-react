@@ -1,27 +1,27 @@
 "use strict";
 
-var Cons = require("../Constants");
+var enums = require("../utils/enums");
 var AppDispatcher = require("../AppDispatcher");
 
 // TurnActions
 module.exports = {
     add: function (spec) {
         AppDispatcher.handle({
-            type: Cons.CREATE_TURN,
+            type: enums.CREATE_TURN,
             payload: spec
         });
     },
 
     update: function (spec) {
         AppDispatcher.handle({
-            type: Cons.UPDATE_TURN,
+            type: enums.UPDATE_TURN,
             payload: spec
         });
     },
 
     remove: function (spec) {
         AppDispatcher.handle({
-            type: Cons.REMOVE_TURN,
+            type: enums.REMOVE_TURN,
             payload: spec
         });
     }
