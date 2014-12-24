@@ -22382,13 +22382,13 @@ module.exports = React.createClass({displayName: 'exports',
                     React.DOM.div({className: "score-input-container" + (this.state.isShowingInput ? " is-showing" : " is-hidden")}, 
                         React.DOM.form({onSubmit: this.addInputScore}, 
                             React.DOM.input({type: "text", ref: "scoreInput"}), 
-                            React.DOM.button({className: "add-score-btn", onClick: this.addInputScore}, "+ ADD SCORE")
+                            React.DOM.button({className: "add-score-btn", onClick: this.addInputScore}, "+ ADD TURN")
                         )
                     ), 
 
                     React.DOM.div({className: "admin-buttons"}, 
                         React.DOM.button({className: turns.length > 0 ? "is-showing" : "is-hidden", onClick: this.toggleTurns}, this.state.showOrHide, " Turns"), 
-                        React.DOM.button({onClick: this.showInput}, this.state.isShowingInput ? "Hide Input" : "Input Score"), 
+                        React.DOM.button({onClick: this.showInput}, this.state.isShowingInput ? "Hide Input" : "Input Turn"), 
                         React.DOM.button({onClick: this.removePlayer}, "Remove Player")
                     )
 

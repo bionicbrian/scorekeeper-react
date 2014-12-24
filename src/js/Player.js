@@ -134,13 +134,13 @@ module.exports = React.createClass({
                     <div className={"score-input-container" + (this.state.isShowingInput ? " is-showing" : " is-hidden")}>
                         <form onSubmit={this.addInputScore}>
                             <input type="text" ref="scoreInput" />
-                            <button className="add-score-btn" onClick={this.addInputScore}>+ ADD SCORE</button>
+                            <button className="add-score-btn" onClick={this.addInputScore}>+ ADD TURN</button>
                         </form>
                     </div>
 
                     <div className="admin-buttons">
                         <button className={turns.length > 0 ? "is-showing" : "is-hidden"} onClick={this.toggleTurns}>{this.state.showOrHide} Turns</button>
-                        <button onClick={this.showInput}>{this.state.isShowingInput ? "Hide Input" : "Input Score"}</button>
+                        <button onClick={this.showInput}>{this.state.isShowingInput ? "Hide Input" : "Input Turn"}</button>
                         <button onClick={this.removePlayer}>Remove Player</button>
                     </div>
 
