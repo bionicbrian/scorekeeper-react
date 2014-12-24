@@ -4,8 +4,19 @@ body
     -webkit-user-select: none
     text-transform: uppercase
 
+.is-showing
+    display: inline-block
+
+.is-hidden
+    display: none
+
 button
     border-radius: 3px
+
+.score-input-container
+    width: 100%
+    text-align: center
+    padding: 10px 0
 
 h1
     font-size: 22px
@@ -50,19 +61,21 @@ input
             background-color: #f4f4f4
             border: 3px solid #999
 
-        .turns-link
-            display: none
+        .admin-buttons
             clear: both
             width: 100%
             text-align: center
             font-size: 0.8em
             margin-top: 5px
 
-            &.is-showing
-                display: block
-
             & button
-                width: 100%
+                margin: 0 10px
+
+                &:first-of-type
+                    margin-left: 0
+
+                &:last-of-type
+                    margin-right: 0
 
     .turns
         display: none

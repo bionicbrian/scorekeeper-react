@@ -22256,6 +22256,7 @@ var PlayerActions = require("./actions/PlayerActions");
 module.exports = React.createClass({displayName: 'exports',
     getInitialState: function () {
         return {
+            isShowingInput: false,
             isShowingTurns: false,
             showOrHide: "Show",
             isScoring: false,
@@ -22281,7 +22282,7 @@ module.exports = React.createClass({displayName: 'exports',
     markIt: function (val) {
         var that = this;
         return function () {
-            console.log("markIt was called with val " + val);
+            that.setState({ isShowingInput: false });
             that.setState({ increment: that.state.increment + val });
             that.setState({ isScoring: true });
 
@@ -22293,6 +22294,7 @@ module.exports = React.createClass({displayName: 'exports',
     },
 
     reset: function () {
+        this.setState({ isShowingInput: false });
         this.setState({ increment: 0 });
         this.setState({ isScoring: false });
     },
@@ -22300,6 +22302,38 @@ module.exports = React.createClass({displayName: 'exports',
     addTurn: function (turn) {
         PlayerActions.addTurn({ playerId: this.props.key, value: this.state.increment });
         this.reset();
+    },
+
+    addInputScore: function () {
+        event.preventDefault();
+
+        var inputEl = this.refs.scoreInput.getDOMNode();
+        var newScoreValue = +inputEl.value;
+
+        if (newScoreValue) {
+            PlayerActions.addTurn({ playerId: this.props.key, value: newScoreValue });
+            inputEl.value = "";
+            this.reset();
+        }
+
+        return false;
+    },
+
+    removePlayer: function (event) {
+        PlayerActions.remove({ playerId: this.props.key });
+        event.preventDefault();
+    },
+
+    showInput: function () {
+        var scoreInputEl = this.refs.scoreInput.getDOMNode();
+        if (this.state.isShowingInput) {
+            scoreInputEl.value = "";
+            this.setState({ isShowingInput: false });
+        } else {
+            this.setState({ isShowingInput: true }, function () {
+                scoreInputEl.focus();
+            });
+        }
     },
 
     render: function () {
@@ -22333,14 +22367,26 @@ module.exports = React.createClass({displayName: 'exports',
                             React.DOM.h2(null, score, " ", increment, " ", React.DOM.span({className: "turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}, React.DOM.span({className: "for"}, "FOR"), " ", turns.length))
                         )
                     ), 
+
                     React.DOM.div({className: "score-buttons"}, 
                         React.DOM.button({onClick: this.markIt(-1)}, "-"), 
                         React.DOM.button({onClick: this.markIt(0)}, "0"), 
                         React.DOM.button({onClick: this.markIt(1)}, "+")
                     ), 
-                    React.DOM.div({className: "turns-link" + (turns.length > 0 ? " is-showing" : "")}, 
-                        React.DOM.button({onClick: this.toggleTurns}, this.state.showOrHide, " turns")
+
+                    React.DOM.div({className: "score-input-container" + (this.state.isShowingInput ? " is-showing" : " is-hidden")}, 
+                        React.DOM.form({onSubmit: this.addInputScore}, 
+                            React.DOM.input({type: "text", ref: "scoreInput"}), 
+                            React.DOM.button({className: "add-score-btn", onClick: this.addInputScore}, "+ ADD SCORE")
+                        )
+                    ), 
+
+                    React.DOM.div({className: "admin-buttons"}, 
+                        React.DOM.button({className: turns.length > 0 ? "is-showing" : "is-hidden", onClick: this.toggleTurns}, this.state.showOrHide, " Turns"), 
+                        React.DOM.button({onClick: this.showInput}, this.state.isShowingInput ? "Hide Input" : "Input Score"), 
+                        React.DOM.button({onClick: this.removePlayer}, "Remove Player")
                     )
+
                 ), 
                 React.DOM.div({className: "turns" + (this.state.isShowingTurns ? " is-expanded" : "")}, 
                     turnsComponents
@@ -22495,7 +22541,7 @@ function addPlayer(data) {
 
 function removePlayer(data) {
     var newPlayers = _.reject(players, function (player) {
-        return player.id === data.id;
+        return player.id === data.playerId;
     });
     players = newPlayers;
 }

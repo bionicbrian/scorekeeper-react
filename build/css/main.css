@@ -4,8 +4,19 @@ body {
   -webkit-user-select: none;
   text-transform: uppercase;
 }
+.is-showing {
+  display: inline-block;
+}
+.is-hidden {
+  display: none;
+}
 button {
   border-radius: 3px;
+}
+.score-input-container {
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
 }
 h1 {
   font-size: 22px;
@@ -50,19 +61,21 @@ input.turns {
   background-color: #f4f4f4;
   border: 3px solid #999;
 }
-.player .controls .turns-link {
-  display: none;
+.player .controls .admin-buttons {
   clear: both;
   width: 100%;
   text-align: center;
   font-size: 0.8em;
   margin-top: 5px;
 }
-.player .controls .turns-link.is-showing {
-  display: block;
+.player .controls .admin-buttons button {
+  margin: 0 10px;
 }
-.player .controls .turns-link button {
-  width: 100%;
+.player .controls .admin-buttons button:first-of-type {
+  margin-left: 0;
+}
+.player .controls .admin-buttons button:last-of-type {
+  margin-right: 0;
 }
 .player .turns {
   display: none;

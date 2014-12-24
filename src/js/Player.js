@@ -8,6 +8,7 @@ var PlayerActions = require("./actions/PlayerActions");
 module.exports = React.createClass({
     getInitialState: function () {
         return {
+            isShowingInput: false,
             isShowingTurns: false,
             showOrHide: "Show",
             isScoring: false,
@@ -33,7 +34,7 @@ module.exports = React.createClass({
     markIt: function (val) {
         var that = this;
         return function () {
-            console.log("markIt was called with val " + val);
+            that.setState({ isShowingInput: false });
             that.setState({ increment: that.state.increment + val });
             that.setState({ isScoring: true });
 
@@ -45,6 +46,7 @@ module.exports = React.createClass({
     },
 
     reset: function () {
+        this.setState({ isShowingInput: false });
         this.setState({ increment: 0 });
         this.setState({ isScoring: false });
     },
@@ -52,6 +54,38 @@ module.exports = React.createClass({
     addTurn: function (turn) {
         PlayerActions.addTurn({ playerId: this.props.key, value: this.state.increment });
         this.reset();
+    },
+
+    addInputScore: function () {
+        event.preventDefault();
+
+        var inputEl = this.refs.scoreInput.getDOMNode();
+        var newScoreValue = +inputEl.value;
+
+        if (newScoreValue) {
+            PlayerActions.addTurn({ playerId: this.props.key, value: newScoreValue });
+            inputEl.value = "";
+            this.reset();
+        }
+
+        return false;
+    },
+
+    removePlayer: function (event) {
+        PlayerActions.remove({ playerId: this.props.key });
+        event.preventDefault();
+    },
+
+    showInput: function () {
+        var scoreInputEl = this.refs.scoreInput.getDOMNode();
+        if (this.state.isShowingInput) {
+            scoreInputEl.value = "";
+            this.setState({ isShowingInput: false });
+        } else {
+            this.setState({ isShowingInput: true }, function () {
+                scoreInputEl.focus();
+            });
+        }
     },
 
     render: function () {
@@ -85,14 +119,26 @@ module.exports = React.createClass({
                             <h2>{score} {increment} <span className={"turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}><span className="for">FOR</span> {turns.length}</span></h2>
                         </div>
                     </div>
+
                     <div className="score-buttons">
                         <button onClick={this.markIt(-1)}>-</button>
                         <button onClick={this.markIt(0)}>0</button>
                         <button onClick={this.markIt(1)}>+</button>
                     </div>
-                    <div className={"turns-link" + (turns.length > 0 ? " is-showing" : "")}>
-                        <button onClick={this.toggleTurns}>{this.state.showOrHide} turns</button>
+
+                    <div className={"score-input-container" + (this.state.isShowingInput ? " is-showing" : " is-hidden")}>
+                        <form onSubmit={this.addInputScore}>
+                            <input type="text" ref="scoreInput" />
+                            <button className="add-score-btn" onClick={this.addInputScore}>+ ADD SCORE</button>
+                        </form>
                     </div>
+
+                    <div className="admin-buttons">
+                        <button className={turns.length > 0 ? "is-showing" : "is-hidden"} onClick={this.toggleTurns}>{this.state.showOrHide} Turns</button>
+                        <button onClick={this.showInput}>{this.state.isShowingInput ? "Hide Input" : "Input Score"}</button>
+                        <button onClick={this.removePlayer}>Remove Player</button>
+                    </div>
+
                 </div>
                 <div className={"turns" + (this.state.isShowingTurns ? " is-expanded" : "")}>
                     {turnsComponents}

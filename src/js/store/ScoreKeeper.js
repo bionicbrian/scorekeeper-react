@@ -22,7 +22,7 @@ function addPlayer(data) {
 
 function removePlayer(data) {
     var newPlayers = _.reject(players, function (player) {
-        return player.id === data.id;
+        return player.id === data.playerId;
     });
     players = newPlayers;
 }
