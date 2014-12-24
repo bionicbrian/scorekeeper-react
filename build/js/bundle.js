@@ -22320,7 +22320,12 @@ module.exports = React.createClass({displayName: 'exports',
     },
 
     removePlayer: function (event) {
-        PlayerActions.remove({ playerId: this.props.key });
+        var confirmation = confirm("Remove " + this.props.player.name + " from the game?");
+
+        if (confirmation) {
+            PlayerActions.remove({ playerId: this.props.key });
+        }
+
         event.preventDefault();
     },
 
