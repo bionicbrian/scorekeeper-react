@@ -52,7 +52,7 @@ module.exports = React.createClass({
     },
 
     addTurn: function (turn) {
-        PlayerActions.addTurn({ playerId: this.props.key, value: this.state.increment });
+        PlayerActions.addTurn({ playerId: this.props.player.id, value: this.state.increment });
         this.reset();
     },
 
@@ -63,7 +63,7 @@ module.exports = React.createClass({
         var newScoreValue = +inputEl.value;
 
         if (newScoreValue) {
-            PlayerActions.addTurn({ playerId: this.props.key, value: newScoreValue });
+            PlayerActions.addTurn({ playerId: this.props.player.id, value: newScoreValue });
             inputEl.value = "";
             this.reset();
         }
@@ -75,7 +75,7 @@ module.exports = React.createClass({
         var confirmation = confirm("Remove " + this.props.player.name + " from the game?");
 
         if (confirmation) {
-            PlayerActions.remove({ playerId: this.props.key });
+            PlayerActions.remove({ playerId: this.props.player.id });
         }
 
         event.preventDefault();
