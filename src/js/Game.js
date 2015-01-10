@@ -1,11 +1,13 @@
 /** @jsx React.DOM */
 
 var React = require("react");
+var Router = require("react-router");
 var Player = require("./Player");
 var PlayerActions = require("./actions/PlayerActions");
 var Store = require("./store/ScoreKeeper");
 
 module.exports = React.createClass({
+    mixins: [Router.State],
     getInitialState: function () {
         return { players: Store.getPlayers() };
     },
@@ -31,7 +33,7 @@ module.exports = React.createClass({
         var newPlayerName = inputEl.value;
 
         if (newPlayerName) {
-            PlayerActions.add({ name: newPlayerName });
+            PlayerActions.add({ name: newPlayerName, game_id: this.props.id });
             inputEl.value = "";
         }
 
@@ -44,8 +46,7 @@ module.exports = React.createClass({
         });
 
         return (
-            <div className="app">
-                <h1>Keep Score</h1>
+            <div className="game">
                 <form onSubmit={this.addPlayer}>
                     <input type="text" className="name" />
                     <button className="add-player-btn" onClick={this.addPlayer}>+ ADD PLAYER</button>

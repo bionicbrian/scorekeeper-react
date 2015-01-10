@@ -2,11 +2,13 @@
 
 var _ = require("underscore");
 var React = require("react");
-var GameActions = require("../actions/GameActions");
-var store = require("../store/Scorekeeper");
+var Navigation = require("react-router").Navigation;
+var GameActions = require("./actions/GameActions");
+var store = require("./store/Scorekeeper");
 var GameListing = require("./GameListing");
 
 module.exports = React.createClass({
+    mixins: [Navigation],
     getInitialState: function () {
         return { games: store.getGames() };
     },
@@ -20,6 +22,11 @@ module.exports = React.createClass({
             this.refs.gameInput.getDOMNode().value = "";
             GameActions.add({ name: gameName, date: new Date() });
         }
+
+        var that = this;
+        setTimeout(function () {
+            that.transitionTo("game", { id: "game_1" });
+        }, 1000);
     },
 
     updateGames: function () {
@@ -31,7 +38,7 @@ module.exports = React.createClass({
     },
 
     componentWillUnmount: function () {
-        store.removeEventListener("CHANGE", this.updateGames);
+        store.removeListener("CHANGE", this.updateGames);
     },
 
     render: function () {

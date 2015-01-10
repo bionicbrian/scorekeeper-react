@@ -64,10 +64,15 @@ function getGames() {
     return games;
 }
 
+function getGame(gameId) {
+    return _.findWhere(games, { id: gameId });
+}
+
 function Store() { }
 Store.prototype = Object.create(EventEmitter.prototype);
 Store.prototype.getPlayers = getPlayers;
 Store.prototype.getGames = getGames;
+Store.prototype.getGame = getGame;
 
 var store = new Store();
 
