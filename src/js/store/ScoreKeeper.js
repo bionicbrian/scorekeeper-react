@@ -1,5 +1,6 @@
 "use strict";
 
+var Q = require("q");
 var EventEmitter = require("events").EventEmitter;
 var _ = require("underscore");
 var enums = require("../utils/enums");
@@ -73,34 +74,35 @@ var store = new Store();
 
 AppDispatcher.register(function (payload) {
     var type = payload.type;
+    var promise;
 
     switch (type) {
         case enums.ADD_GAME:
-            addGame(payload.data);
+            promise = Q.when(addGame(payload.data));
             break;
         case enums.UPDATE_PLAYER:
-            updatePlayer(payload.data);
+            promise = Q.when(updatePlayer(payload.data));
             break;
         case enums.ADD_PLAYER:
-            addPlayer(payload.data);
+            promise = Q.when(addPlayer(payload.data));
             break;
         case enums.REMOVE_PLAYER:
-            removePlayer(payload.data);
+            promise = Q.when(removePlayer(payload.data));
             break;
         case enums.ADD_TURN:
-            addTurn(payload.data);
+            promise = Q.when(addTurn(payload.data));
             break;
         case enums.UPDATE_TURN:
-            updateTurn(payload.data);
+            promise = Q.when(updateTurn(payload.data));
             break;
         case enums.REMOVE_TURN:
-            removeTurn(payload.data);
+            promise = Q.when(removeTurn(payload.data));
             break;
         default:
             break;
     }
 
-    store.emit("CHANGE");
+    promise.done(function () { store.emit("CHANGE") });
 });
 
 module.exports = store;
