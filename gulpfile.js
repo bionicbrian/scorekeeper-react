@@ -8,7 +8,7 @@ var stylus = require("gulp-stylus");
 
 var paths = {
     css: "src/style/**/*.styl",
-    appJS: "./src/js/app.jsx",
+    appJS: "./src/js/main.jsx",
     js: "src/js/**/*.js"
 };
 
