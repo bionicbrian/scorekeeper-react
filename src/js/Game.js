@@ -2,7 +2,7 @@
 
 var React = require("react");
 var Player = require("./Player");
-var PlayerActions = require("./actions/PlayerActions");
+var GameActions = require("./actions/GameActions");
 var Store = require("./store/ScoreKeeper");
 
 module.exports = React.createClass({
@@ -31,7 +31,7 @@ module.exports = React.createClass({
         var newPlayerName = inputEl.value;
 
         if (newPlayerName) {
-            PlayerActions.add({ name: newPlayerName });
+            GameActions.addPlayer({ name: newPlayerName });
             inputEl.value = "";
         }
 

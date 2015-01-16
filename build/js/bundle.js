@@ -23708,7 +23708,7 @@ module.exports = AppDispatcher;
 
 var React = require("react");
 var Player = require("./Player");
-var PlayerActions = require("./actions/PlayerActions");
+var GameActions = require("./actions/GameActions");
 var Store = require("./store/ScoreKeeper");
 
 module.exports = React.createClass({displayName: "exports",
@@ -23737,7 +23737,7 @@ module.exports = React.createClass({displayName: "exports",
         var newPlayerName = inputEl.value;
 
         if (newPlayerName) {
-            PlayerActions.add({ name: newPlayerName });
+            GameActions.addPlayer({ name: newPlayerName });
             inputEl.value = "";
         }
 
@@ -23762,12 +23762,13 @@ module.exports = React.createClass({displayName: "exports",
     }
 });
 
-},{"./Player":170,"./actions/PlayerActions":172,"./store/ScoreKeeper":173,"react":166}],170:[function(require,module,exports){
+},{"./Player":170,"./actions/GameActions":172,"./store/ScoreKeeper":175,"react":166}],170:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require("react/addons");
 var Turn = require("./Turn");
 var PlayerActions = require("./actions/PlayerActions");
+var GameActions = require("./actions/GameActions");
 
 // Player
 module.exports = React.createClass({displayName: "exports",
@@ -23840,7 +23841,7 @@ module.exports = React.createClass({displayName: "exports",
         var confirmation = confirm("Remove " + this.props.player.name + " from the game?");
 
         if (confirmation) {
-            PlayerActions.remove({ playerId: this.props.player.id });
+            GameActions.removePlayer({ playerId: this.props.player.id });
         }
 
         event.preventDefault();
@@ -23918,12 +23919,13 @@ module.exports = React.createClass({displayName: "exports",
     }
 });
 
-},{"./Turn":171,"./actions/PlayerActions":172,"react/addons":5}],171:[function(require,module,exports){
+},{"./Turn":171,"./actions/GameActions":172,"./actions/PlayerActions":173,"react/addons":5}],171:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var _ = require("underscore");
 var React = require("react/addons");
 var PlayerActions = require("./actions/PlayerActions");
+var TurnActions = require("./actions/TurnActions");
 
 // Turn
 module.exports = React.createClass({displayName: "exports",
@@ -23959,9 +23961,9 @@ module.exports = React.createClass({displayName: "exports",
         if (!_.isNumber(+newVal) || _.isNaN(+newVal) || newVal === "") {
             this.setState({ amount: newVal });
         } else {
-            PlayerActions.updateTurn({ playerId: this.props.playerId,
-                                       turnId: this.props.turn.id,
-                                       newValue: +newVal });
+            TurnActions.update({ playerId: this.props.playerId,
+                                 turnId: this.props.turn.id,
+                                 newValue: +newVal });
         }
     },
 
@@ -23987,7 +23989,7 @@ module.exports = React.createClass({displayName: "exports",
     }
 });
 
-},{"./actions/PlayerActions":172,"react/addons":5,"underscore":167}],172:[function(require,module,exports){
+},{"./actions/PlayerActions":173,"./actions/TurnActions":174,"react/addons":5,"underscore":167}],172:[function(require,module,exports){
 "use strict";
 
 var AppDispatcher = require("../AppDispatcher");
@@ -23995,13 +23997,36 @@ var enums = require("../utils/enums");
 
 // PlayerActions
 module.exports = {
-    add: function (data) {
+    addGame: function (data) {
+        AppDispatcher.handle({
+            type: enums.ADD_GAME,
+            data: data
+        });
+    },
+
+    addPlayer: function (data) {
         AppDispatcher.handle({
             type: enums.ADD_PLAYER,
             data: data
         });
     },
 
+    removePlayer: function (data) {
+        AppDispatcher.handle({
+            type: enums.REMOVE_PLAYER,
+            data: data
+        });
+    }
+};
+
+},{"../AppDispatcher":168,"../utils/enums":176}],173:[function(require,module,exports){
+"use strict";
+
+var AppDispatcher = require("../AppDispatcher");
+var enums = require("../utils/enums");
+
+// PlayerActions
+module.exports = {
     update: function (data) {
         AppDispatcher.handle({
             type: enums.UPDATE_PLAYER,
@@ -24009,23 +24034,9 @@ module.exports = {
         });
     },
 
-    remove: function (data) {
-        AppDispatcher.handle({
-            type: enums.REMOVE_PLAYER,
-            data: data
-        });
-    },
-
     addTurn: function (data) {
         AppDispatcher.handle({
             type: enums.ADD_TURN,
-            data: data
-        });
-    },
-
-    updateTurn: function (data) {
-        AppDispatcher.handle({
-            type: enums.UPDATE_TURN,
             data: data
         });
     },
@@ -24038,7 +24049,23 @@ module.exports = {
     }
 };
 
-},{"../AppDispatcher":168,"../utils/enums":174}],173:[function(require,module,exports){
+},{"../AppDispatcher":168,"../utils/enums":176}],174:[function(require,module,exports){
+"use strict";
+
+var enums = require("../utils/enums");
+var AppDispatcher = require("../AppDispatcher");
+
+// TurnActions
+module.exports = {
+    update: function (spec) {
+        AppDispatcher.handle({
+            type: enums.UPDATE_TURN,
+            payload: spec
+        });
+    }
+};
+
+},{"../AppDispatcher":168,"../utils/enums":176}],175:[function(require,module,exports){
 "use strict";
 
 var Q = require("q");
@@ -24149,7 +24176,7 @@ AppDispatcher.register(function (payload) {
 module.exports = store;
 
 
-},{"../AppDispatcher":168,"../utils/enums":174,"events":2,"q":4,"underscore":167}],174:[function(require,module,exports){
+},{"../AppDispatcher":168,"../utils/enums":176,"events":2,"q":4,"underscore":167}],176:[function(require,module,exports){
 "use strict";
 
 // ENUMS

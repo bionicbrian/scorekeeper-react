@@ -18,7 +18,7 @@ module.exports = React.createClass({
 
         if (gameName) {
             this.refs.gameInput.getDOMNode().value = "";
-            GameActions.add({ name: gameName, date: new Date() });
+            GameActions.addGame({ name: gameName, date: new Date() });
         }
     },
 

@@ -5,13 +5,6 @@ var enums = require("../utils/enums");
 
 // PlayerActions
 module.exports = {
-    add: function (data) {
-        AppDispatcher.handle({
-            type: enums.ADD_PLAYER,
-            data: data
-        });
-    },
-
     update: function (data) {
         AppDispatcher.handle({
             type: enums.UPDATE_PLAYER,
@@ -19,23 +12,9 @@ module.exports = {
         });
     },
 
-    remove: function (data) {
-        AppDispatcher.handle({
-            type: enums.REMOVE_PLAYER,
-            data: data
-        });
-    },
-
     addTurn: function (data) {
         AppDispatcher.handle({
             type: enums.ADD_TURN,
-            data: data
-        });
-    },
-
-    updateTurn: function (data) {
-        AppDispatcher.handle({
-            type: enums.UPDATE_TURN,
             data: data
         });
     },

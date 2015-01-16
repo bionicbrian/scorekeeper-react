@@ -3,6 +3,7 @@
 var _ = require("underscore");
 var React = require("react/addons");
 var PlayerActions = require("./actions/PlayerActions");
+var TurnActions = require("./actions/TurnActions");
 
 // Turn
 module.exports = React.createClass({
@@ -38,9 +39,9 @@ module.exports = React.createClass({
         if (!_.isNumber(+newVal) || _.isNaN(+newVal) || newVal === "") {
             this.setState({ amount: newVal });
         } else {
-            PlayerActions.updateTurn({ playerId: this.props.playerId,
-                                       turnId: this.props.turn.id,
-                                       newValue: +newVal });
+            TurnActions.update({ playerId: this.props.playerId,
+                                 turnId: this.props.turn.id,
+                                 newValue: +newVal });
         }
     },
 

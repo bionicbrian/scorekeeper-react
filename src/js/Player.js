@@ -3,6 +3,7 @@
 var React = require("react/addons");
 var Turn = require("./Turn");
 var PlayerActions = require("./actions/PlayerActions");
+var GameActions = require("./actions/GameActions");
 
 // Player
 module.exports = React.createClass({
@@ -75,7 +76,7 @@ module.exports = React.createClass({
         var confirmation = confirm("Remove " + this.props.player.name + " from the game?");
 
         if (confirmation) {
-            PlayerActions.remove({ playerId: this.props.player.id });
+            GameActions.removePlayer({ playerId: this.props.player.id });
         }
 
         event.preventDefault();
