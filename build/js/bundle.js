@@ -23751,11 +23751,27 @@ module.exports = React.createClass({displayName: "exports",
 
         return (
             React.createElement("div", {className: "app"}, 
-                React.createElement("h1", null, "Keep Score"), 
-                React.createElement("form", {onSubmit: this.addPlayer}, 
-                    React.createElement("input", {type: "text", className: "name"}), 
-                    React.createElement("button", {className: "add-player-btn", onClick: this.addPlayer}, "+ ADD PLAYER")
+                React.createElement("div", {className: "row"}, 
+                    React.createElement("div", {className: "large-12 columns"}, 
+                        React.createElement("h1", null, "Keep Score")
+                    )
                 ), 
+
+                React.createElement("form", {onSubmit: this.addPlayer}, 
+                    React.createElement("div", {className: "row"}, 
+                        React.createElement("div", {className: "large-12 columns"}, 
+                            React.createElement("div", {className: "row collapse"}, 
+                                React.createElement("div", {className: "small-10 columns"}, 
+                                    React.createElement("input", {type: "text", placeholder: "New player name"})
+                                ), 
+                                React.createElement("div", {className: "small-2 columns"}, 
+                                    React.createElement("a", {href: "#", onClick: this.addPlayer, className: "button postfix"}, "+")
+                                )
+                            )
+                        )
+                    )
+                ), 
+
                 players
             )
         );
@@ -23882,37 +23898,65 @@ module.exports = React.createClass({displayName: "exports",
         }
 
         return (
-            React.createElement("div", {className: "player"}, 
-                React.createElement("div", {className: "controls" + (this.state.isScoring ? " is-scoring" : "")}, 
-                    React.createElement("div", {className: "name-and-score"}, 
-                        React.createElement("h2", null, this.props.player.name), 
-                        React.createElement("div", {className: "score"}, 
-                            React.createElement("h2", null, score, " ", increment, " ", React.createElement("span", {className: "turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}, React.createElement("span", {className: "for"}, "FOR"), " ", turns.length))
+            React.createElement("div", {className: "row"}, 
+                React.createElement("div", {className: "large-12 columns"}, 
+                    React.createElement("div", {className: "row controls"}, 
+                        React.createElement("div", {className: "large-4 small-4 columns"}, 
+                            React.createElement("h3", null, this.props.player.name), 
+                            React.createElement("div", {className: "row"}, 
+                                React.createElement("div", {className: "large-12 small-12 columns"}, 
+                                    React.createElement("h4", null, score, " ", increment, " ", React.createElement("span", {className: (!this.state.isScoring ? "" : "hide")}, "FOR ", turns.length))
+                                )
+                            )
+                        ), 
+
+                        React.createElement("div", {className: "large-8 small-8 columns" + (!this.state.isShowingInput ? "" : " hide")}, 
+                            React.createElement("ul", {className: "button-group right"}, 
+                              React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.markIt(-1), className: "button small"}, "-")), 
+                              React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.markIt(0), className: "button small"}, "0")), 
+                              React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.markIt(1), className: "button small"}, "+"))
+                            )
+                        ), 
+
+                        React.createElement("div", {className: "large-8 small-8 columns" + (this.state.isShowingInput ? "" : " hide")}, 
+                            React.createElement("form", {onSubmit: this.addInputScore}, 
+                                React.createElement("div", {className: "row"}, 
+                                    React.createElement("div", {className: "large-12 columns"}, 
+                                        React.createElement("div", {className: "row collapse"}, 
+                                            React.createElement("div", {className: "small-10 columns"}, 
+                                                React.createElement("input", {ref: "scoreInput", type: "text", placeholder: "New turn value"})
+                                            ), 
+                                            React.createElement("div", {className: "small-2 columns"}, 
+                                                React.createElement("a", {href: "#", onClick: this.addInputScore, className: "button postfix"}, "+")
+                                            )
+                                        )
+                                    )
+                                )
+                            )
                         )
                     ), 
 
-                    React.createElement("div", {className: "score-buttons"}, 
-                        React.createElement("button", {onClick: this.markIt(-1)}, "-"), 
-                        React.createElement("button", {onClick: this.markIt(0)}, "0"), 
-                        React.createElement("button", {onClick: this.markIt(1)}, "+")
-                    ), 
-
-                    React.createElement("div", {className: "score-input-container" + (this.state.isShowingInput ? " is-showing" : " is-hidden")}, 
-                        React.createElement("form", {onSubmit: this.addInputScore}, 
-                            React.createElement("input", {type: "text", ref: "scoreInput"}), 
-                            React.createElement("button", {className: "add-score-btn", onClick: this.addInputScore}, "+ ADD TURN")
+                    React.createElement("div", {className: "row"}, 
+                        React.createElement("div", {className: "large-12 columns"}, 
+                            React.createElement("ul", {className: "button-group text-center"}, 
+                                React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.toggleTurns, className: "button secondary tiny " + (turns.length > 0 ? "" : "hide")}, this.state.showOrHide, " Turns")), 
+                                React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.showInput, className: "button secondary tiny"}, this.state.isShowingInput ? "Hide Input" : "Input Turn")), 
+                                React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.removePlayer, className: "button secondary tiny"}, "Remove"))
+                            )
                         )
                     ), 
 
-                    React.createElement("div", {className: "admin-buttons"}, 
-                        React.createElement("button", {className: turns.length > 0 ? "is-showing" : "is-hidden", onClick: this.toggleTurns}, this.state.showOrHide, " Turns"), 
-                        React.createElement("button", {onClick: this.showInput}, this.state.isShowingInput ? "Hide Input" : "Input Turn"), 
-                        React.createElement("button", {onClick: this.removePlayer}, "Remove Player")
+                    React.createElement("div", {className: "row turns" + (this.state.isShowingTurns ? "" : "hide")}, 
+                        React.createElement("div", {className: "large-10 large-offset-1 small-10 small-offset-1 columns"}, 
+                            turnsComponents
+                        )
                     )
-
                 ), 
-                React.createElement("div", {className: "turns" + (this.state.isShowingTurns ? " is-expanded" : "")}, 
-                    turnsComponents
+
+                React.createElement("div", {className: "row"}, 
+                    React.createElement("div", {className: "large-10 large-offset-1 small-10 small-offset-1 columns"}, 
+                        React.createElement("hr", null)
+                    )
                 )
             )
         );
@@ -23951,11 +23995,18 @@ module.exports = React.createClass({displayName: "exports",
         this.setState({ amount: this.props.turn.value });
     },
 
-    deleteTurn: function () {
-        PlayerActions.removeTurn({ playerId: this.props.playerId, turnId: this.props.turn.id });
+    deleteTurn: function (event) {
+        var confirmation = confirm("Delete turn?");
+
+        if (confirmation) {
+            PlayerActions.removeTurn({ playerId: this.props.playerId, turnId: this.props.turn.id });
+        }
+
+        event.preventDefault();
     },
 
     updateTurnValue: function (event) {
+        debugger;
         var newVal = event.target.value;
 
         if (!_.isNumber(+newVal) || _.isNaN(+newVal) || newVal === "") {
@@ -23968,22 +24019,25 @@ module.exports = React.createClass({displayName: "exports",
     },
 
     render: function () {
-        var classSet = React.addons.classSet;
-        var classes = classSet({
-            "turn": true,
-            "is-editing": this.state.isEditing
-        });
-
         var value = this.state.amount;
 
         return (
-            React.createElement("div", {className: classes}, 
-                React.createElement("span", {className: "amount-value"}, value), 
-                React.createElement("form", {onSubmit: this.toggleEditing}, 
-                    React.createElement("input", {value: value, onChange: this.updateTurnValue, ref: "turnInput"})
-                ), 
-                React.createElement("button", {onClick: this.toggleEditing}, this.state.isEditing ? "SAVE" : "EDIT"), 
-                React.createElement("button", {onClick: this.deleteTurn}, "DELETE")
+            React.createElement("div", {className: "row"}, 
+                React.createElement("div", {className: "large-12 small-12 columns"}, 
+                    React.createElement("form", {onSubmit: this.toggleEditing}, 
+                        React.createElement("div", {className: "row collapse"}, 
+                            React.createElement("div", {className: "large-6 small-6 columns"}, 
+                                React.createElement("input", {value: value, onChange: this.updateTurnValue, ref: "turnInput"})
+                            ), 
+                            React.createElement("div", {className: "large-3 small-3 columns"}, 
+                                React.createElement("a", {href: "#", onClick: this.toggleEditing, className: "button postfix"}, "+")
+                            ), 
+                            React.createElement("div", {className: "large-3 small-3 columns"}, 
+                                React.createElement("a", {href: "#", onClick: this.deleteTurn, className: "button postfix"}, "x")
+                            )
+                        )
+                    )
+                )
             )
         );
     }

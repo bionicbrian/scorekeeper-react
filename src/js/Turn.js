@@ -29,11 +29,18 @@ module.exports = React.createClass({
         this.setState({ amount: this.props.turn.value });
     },
 
-    deleteTurn: function () {
-        PlayerActions.removeTurn({ playerId: this.props.playerId, turnId: this.props.turn.id });
+    deleteTurn: function (event) {
+        var confirmation = confirm("Delete turn?");
+
+        if (confirmation) {
+            PlayerActions.removeTurn({ playerId: this.props.playerId, turnId: this.props.turn.id });
+        }
+
+        event.preventDefault();
     },
 
     updateTurnValue: function (event) {
+        debugger;
         var newVal = event.target.value;
 
         if (!_.isNumber(+newVal) || _.isNaN(+newVal) || newVal === "") {
@@ -46,22 +53,25 @@ module.exports = React.createClass({
     },
 
     render: function () {
-        var classSet = React.addons.classSet;
-        var classes = classSet({
-            "turn": true,
-            "is-editing": this.state.isEditing
-        });
-
         var value = this.state.amount;
 
         return (
-            <div className={classes}>
-                <span className="amount-value">{value}</span>
-                <form onSubmit={this.toggleEditing}>
-                    <input value={value} onChange={this.updateTurnValue} ref="turnInput" />
-                </form>
-                <button onClick={this.toggleEditing}>{this.state.isEditing ? "SAVE" : "EDIT"}</button>
-                <button onClick={this.deleteTurn}>DELETE</button>
+            <div className="row">
+                <div className="large-12 small-12 columns">
+                    <form onSubmit={this.toggleEditing}>
+                        <div className="row collapse">
+                            <div className="large-6 small-6 columns">
+                                <input value={value} onChange={this.updateTurnValue} ref="turnInput" />
+                            </div>
+                            <div className="large-3 small-3 columns">
+                                <a href="#" onClick={this.toggleEditing} className="button postfix">+</a>
+                            </div>
+                            <div className="large-3 small-3 columns">
+                                <a href="#" onClick={this.deleteTurn} className="button postfix">x</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         );
     }

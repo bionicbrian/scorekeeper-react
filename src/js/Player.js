@@ -117,37 +117,65 @@ module.exports = React.createClass({
         }
 
         return (
-            <div className="player">
-                <div className={"controls" + (this.state.isScoring ? " is-scoring" : "")}>
-                    <div className="name-and-score">
-                        <h2>{this.props.player.name}</h2>
-                        <div className="score">
-                            <h2>{score} {increment} <span className={"turns-count" + (!this.state.isScoring ? "" : " hide-turns-count")}><span className="for">FOR</span> {turns.length}</span></h2>
+            <div className="row">
+                <div className="large-12 columns">
+                    <div className="row controls">
+                        <div className="large-4 small-4 columns">
+                            <h3>{this.props.player.name}</h3>
+                            <div className="row">
+                                <div className="large-12 small-12 columns">
+                                    <h4>{score} {increment} <span className={(!this.state.isScoring ? "" : "hide")}>FOR {turns.length}</span></h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={"large-8 small-8 columns" + (!this.state.isShowingInput ? "" : " hide")}>
+                            <ul className="button-group right">
+                              <li><a href="#" onClick={this.markIt(-1)} className="button small">-</a></li>
+                              <li><a href="#" onClick={this.markIt(0)} className="button small">0</a></li>
+                              <li><a href="#" onClick={this.markIt(1)} className="button small">+</a></li>
+                            </ul>
+                        </div>
+
+                        <div className={"large-8 small-8 columns" + (this.state.isShowingInput ? "" : " hide")}>
+                            <form onSubmit={this.addInputScore}>
+                                <div className="row">
+                                    <div className="large-12 columns">
+                                        <div className="row collapse">
+                                            <div className="small-10 columns">
+                                                <input ref="scoreInput" type="text" placeholder="New turn value" />
+                                            </div>
+                                            <div className="small-2 columns">
+                                                <a href="#" onClick={this.addInputScore} className="button postfix">+</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
-                    <div className="score-buttons">
-                        <button onClick={this.markIt(-1)}>-</button>
-                        <button onClick={this.markIt(0)}>0</button>
-                        <button onClick={this.markIt(1)}>+</button>
+                    <div className="row">
+                        <div className="large-12 columns">
+                            <ul className="button-group text-center">
+                                <li><a href="#" onClick={this.toggleTurns} className={"button secondary tiny " + (turns.length > 0 ? "" : "hide")}>{this.state.showOrHide} Turns</a></li>
+                                <li><a href="#" onClick={this.showInput} className="button secondary tiny">{this.state.isShowingInput ? "Hide Input" : "Input Turn"}</a></li>
+                                <li><a href="#" onClick={this.removePlayer} className="button secondary tiny">Remove</a></li>
+                            </ul>
+                        </div>
                     </div>
 
-                    <div className={"score-input-container" + (this.state.isShowingInput ? " is-showing" : " is-hidden")}>
-                        <form onSubmit={this.addInputScore}>
-                            <input type="text" ref="scoreInput" />
-                            <button className="add-score-btn" onClick={this.addInputScore}>+ ADD TURN</button>
-                        </form>
+                    <div className={"row turns" + (this.state.isShowingTurns ? "" : "hide")}>
+                        <div className="large-10 large-offset-1 small-10 small-offset-1 columns">
+                            {turnsComponents}
+                        </div>
                     </div>
-
-                    <div className="admin-buttons">
-                        <button className={turns.length > 0 ? "is-showing" : "is-hidden"} onClick={this.toggleTurns}>{this.state.showOrHide} Turns</button>
-                        <button onClick={this.showInput}>{this.state.isShowingInput ? "Hide Input" : "Input Turn"}</button>
-                        <button onClick={this.removePlayer}>Remove Player</button>
-                    </div>
-
                 </div>
-                <div className={"turns" + (this.state.isShowingTurns ? " is-expanded" : "")}>
-                    {turnsComponents}
+
+                <div className="row">
+                    <div className="large-10 large-offset-1 small-10 small-offset-1 columns">
+                        <hr />
+                    </div>
                 </div>
             </div>
         );

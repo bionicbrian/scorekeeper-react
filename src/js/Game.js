@@ -45,11 +45,27 @@ module.exports = React.createClass({
 
         return (
             <div className="app">
-                <h1>Keep Score</h1>
+                <div className="row">
+                    <div className="large-12 columns">
+                        <h1>Keep Score</h1>
+                    </div>
+                </div>
+
                 <form onSubmit={this.addPlayer}>
-                    <input type="text" className="name" />
-                    <button className="add-player-btn" onClick={this.addPlayer}>+ ADD PLAYER</button>
+                    <div className="row">
+                        <div className="large-12 columns">
+                            <div className="row collapse">
+                                <div className="small-10 columns">
+                                    <input type="text" placeholder="New player name" />
+                                </div>
+                                <div className="small-2 columns">
+                                    <a href="#" onClick={this.addPlayer} className="button postfix">+</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
+
                 {players}
             </div>
         );
