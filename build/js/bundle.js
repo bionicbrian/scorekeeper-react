@@ -24006,7 +24006,6 @@ module.exports = React.createClass({displayName: "exports",
     },
 
     updateTurnValue: function (event) {
-        debugger;
         var newVal = event.target.value;
 
         if (!_.isNumber(+newVal) || _.isNaN(+newVal) || newVal === "") {
@@ -24027,7 +24026,7 @@ module.exports = React.createClass({displayName: "exports",
                     React.createElement("form", {onSubmit: this.toggleEditing}, 
                         React.createElement("div", {className: "row collapse"}, 
                             React.createElement("div", {className: "large-6 small-6 columns"}, 
-                                React.createElement("input", {value: value, onChange: this.updateTurnValue, ref: "turnInput"})
+                                React.createElement("input", {value: value, type: "text", onChange: this.updateTurnValue, ref: "turnInput"})
                             ), 
                             React.createElement("div", {className: "large-3 small-3 columns"}, 
                                 React.createElement("a", {href: "#", onClick: this.toggleEditing, className: "button postfix"}, "+")
@@ -24114,7 +24113,7 @@ module.exports = {
     update: function (spec) {
         AppDispatcher.handle({
             type: enums.UPDATE_TURN,
-            payload: spec
+            data: spec
         });
     }
 };

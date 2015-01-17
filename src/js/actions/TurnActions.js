@@ -8,7 +8,7 @@ module.exports = {
     update: function (spec) {
         AppDispatcher.handle({
             type: enums.UPDATE_TURN,
-            payload: spec
+            data: spec
         });
     }
 };

@@ -40,7 +40,6 @@ module.exports = React.createClass({
     },
 
     updateTurnValue: function (event) {
-        debugger;
         var newVal = event.target.value;
 
         if (!_.isNumber(+newVal) || _.isNaN(+newVal) || newVal === "") {
@@ -61,7 +60,7 @@ module.exports = React.createClass({
                     <form onSubmit={this.toggleEditing}>
                         <div className="row collapse">
                             <div className="large-6 small-6 columns">
-                                <input value={value} onChange={this.updateTurnValue} ref="turnInput" />
+                                <input value={value} type="text" onChange={this.updateTurnValue} ref="turnInput" />
                             </div>
                             <div className="large-3 small-3 columns">
                                 <a href="#" onClick={this.toggleEditing} className="button postfix">+</a>
