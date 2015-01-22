@@ -1,175 +1,175 @@
-body
-    font-size: 18px
-    font-family: "Lucide Grande", Helvetica, sans-serif
-    -webkit-user-select: none
-    text-transform: uppercase
+// body
+//     font-size: 18px
+//     font-family: "Lucide Grande", Helvetica, sans-serif
+//     -webkit-user-select: none
+//     text-transform: uppercase
 
-.is-showing
-    display: inline-block
+// .is-showing
+//     display: inline-block
 
-.is-hidden
-    display: none
+// .is-hidden
+//     display: none
 
-button
-    border-radius: 3px
+// button
+//     border-radius: 3px
 
-.score-input-container
-    width: 100%
-    text-align: center
-    padding: 10px 0
+// .score-input-container
+//     width: 100%
+//     text-align: center
+//     padding: 10px 0
 
-h1
-    font-size: 22px
+// h1
+//     font-size: 22px
 
-h2
-    font-size: 18px
-    line-height: 1
-    font-weight: bold
-    margin: 0
+// h2
+//     font-size: 18px
+//     line-height: 1
+//     font-weight: bold
+//     margin: 0
 
-input
-    line-height: 1
-    display: inline-block
+// input
+//     line-height: 1
+//     display: inline-block
 
-    &.h1
-        font-size: 22px
-        margin-bottom: 15px
+//     &.h1
+//         font-size: 22px
+//         margin-bottom: 15px
 
-    &.name
-        font-size: 18px
-        font-weight: bold
-        margin: 0
+//     &.name
+//         font-size: 18px
+//         font-weight: bold
+//         margin: 0
 
-    &.score
-    &.turns
-        font-size: 18px
+//     &.score
+//     &.turns
+//         font-size: 18px
 
-.score-line
-    font-size: 22px
-    line-height: 1.2
-    margin: 0
+// .score-line
+//     font-size: 22px
+//     line-height: 1.2
+//     margin: 0
 
-.player
-    margin-top: 10px
+// .player
+//     margin-top: 10px
 
-    .controls
-        overflow: hidden
-        padding: 2px
-        border: 3px solid black
+//     .controls
+//         overflow: hidden
+//         padding: 2px
+//         border: 3px solid black
 
-        &.is-scoring
-            background-color: #f4f4f4
-            border: 3px solid #999
+//         &.is-scoring
+//             background-color: #f4f4f4
+//             border: 3px solid #999
 
-        .admin-buttons
-            clear: both
-            width: 100%
-            text-align: center
-            font-size: 0.8em
-            margin: 10px 0
+//         .admin-buttons
+//             clear: both
+//             width: 100%
+//             text-align: center
+//             font-size: 0.8em
+//             margin: 10px 0
 
-            & button
-                margin: 0 10px
+//             & button
+//                 margin: 0 10px
 
-                &:first-of-type
-                    margin-left: 0
+//                 &:first-of-type
+//                     margin-left: 0
 
-                &:last-of-type
-                    margin-right: 0
+//                 &:last-of-type
+//                     margin-right: 0
 
-    .turns
-        display: none
-        margin: 0 10px
-        border: 3px solid black
-        border-top: none
-        border-bottom-right-radius: 5px
-        border-bottom-left-radius: 5px
+//     .turns
+//         display: none
+//         margin: 0 10px
+//         border: 3px solid black
+//         border-top: none
+//         border-bottom-right-radius: 5px
+//         border-bottom-left-radius: 5px
 
-        &.is-expanded
-            display: block
+//         &.is-expanded
+//             display: block
 
-        .turn
-            background-color: #f6f6f6
-            overflow: hidden
-            padding: 0 10px
-            margin-bottom: 1px
+//         .turn
+//             background-color: #f6f6f6
+//             overflow: hidden
+//             padding: 0 10px
+//             margin-bottom: 1px
 
-            & > .amount-value
-                display: inline-block
+//             & > .amount-value
+//                 display: inline-block
 
-            & > form
-                display: none
+//             & > form
+//                 display: none
 
-            &.is-editing
-                & > form
-                    display: inline-block
+//             &.is-editing
+//                 & > form
+//                     display: inline-block
 
-                & > .amount-value
-                    display: none
+//                 & > .amount-value
+//                     display: none
 
-.add-player-link
-    font-size: 1em
-    margin-bottom: 10px
+// .add-player-link
+//     font-size: 1em
+//     margin-bottom: 10px
 
-    & > a, a:active, a:hover, a:visited
-        color: #999
+//     & > a, a:active, a:hover, a:visited
+//         color: #999
 
-        &:hover
-            color: #777
+//         &:hover
+//             color: #777
 
-.new-player
-    margin-bottom: 10px;
+// .new-player
+//     margin-bottom: 10px;
 
-    .name
-        display: inline-block
-    .add-player-btn
-        display: inline-block
+//     .name
+//         display: inline-block
+//     .add-player-btn
+//         display: inline-block
 
-.player.isEditing
-    > .name-and-score
-        width: 70%
+// .player.isEditing
+//     > .name-and-score
+//         width: 70%
 
-.name-and-score
-    box-sizing: border-box
-    display: inline-block
-    float: left
-    padding: 10px
-    width: 50%
-    text-overflow: ellipsis
+// .name-and-score
+//     box-sizing: border-box
+//     display: inline-block
+//     float: left
+//     padding: 10px
+//     width: 50%
+//     text-overflow: ellipsis
 
-    .score h2
-        .turns-count
-            &.hide-turns-count
-                display: none
+//     .score h2
+//         .turns-count
+//             &.hide-turns-count
+//                 display: none
 
-            .for
-                font-size: 0.5em
-        
-.edit
-    font-size: 0.8em
+//             .for
+//                 font-size: 0.5em
 
-    & > a, a:active, a:hover, a:visited
-        color: #cdcdcd
+// .edit
+//     font-size: 0.8em
 
-        &:hover
-            color: #777
+//     & > a, a:active, a:hover, a:visited
+//         color: #cdcdcd
 
-.score-buttons
-    display: inline-block
-    float: right
-    width: 50%
-    text-align: right
+//         &:hover
+//             color: #777
 
-    & button
-        font-size: 24px
-        line-height: 1
-        display: inline-block
-        padding: 5px
-        margin-top: 10px
-        width: 30%
-        height: 40px
+// .score-buttons
+//     display: inline-block
+//     float: right
+//     width: 50%
+//     text-align: right
 
-    & > .edit
-        margin-top: 10px
-        font-size: 1.2em
-        line-height: 40px;
+//     & button
+//         font-size: 24px
+//         line-height: 1
+//         display: inline-block
+//         padding: 5px
+//         margin-top: 10px
+//         width: 30%
+//         height: 40px
+
+//     & > .edit
+//         margin-top: 10px
+//         font-size: 1.2em
+//         line-height: 40px;

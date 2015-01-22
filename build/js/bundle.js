@@ -23898,64 +23898,62 @@ module.exports = React.createClass({displayName: "exports",
         }
 
         return (
-            React.createElement("div", {className: "row"}, 
+            React.createElement("div", {className: "row player"}, 
                 React.createElement("div", {className: "large-12 columns"}, 
-                    React.createElement("div", {className: "row controls"}, 
-                        React.createElement("div", {className: "large-4 small-4 columns"}, 
-                            React.createElement("h3", null, this.props.player.name), 
-                            React.createElement("div", {className: "row"}, 
-                                React.createElement("div", {className: "large-12 small-12 columns"}, 
-                                    React.createElement("h4", null, score, " ", increment, " ", React.createElement("span", {className: (!this.state.isScoring ? "" : "hide")}, "FOR ", turns.length))
-                                )
-                            )
-                        ), 
+                    React.createElement("div", {className: "panel"}, 
 
-                        React.createElement("div", {className: "large-8 small-8 columns" + (!this.state.isShowingInput ? "" : " hide")}, 
-                            React.createElement("ul", {className: "button-group right"}, 
-                              React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.markIt(-1), className: "button small"}, "-")), 
-                              React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.markIt(0), className: "button small"}, "0")), 
-                              React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.markIt(1), className: "button small"}, "+"))
-                            )
-                        ), 
-
-                        React.createElement("div", {className: "large-8 small-8 columns" + (this.state.isShowingInput ? "" : " hide")}, 
-                            React.createElement("form", {onSubmit: this.addInputScore}, 
+                        React.createElement("div", {className: "row controls"}, 
+                            React.createElement("div", {className: "large-4 small-4 columns"}, 
+                                React.createElement("h3", null, this.props.player.name), 
                                 React.createElement("div", {className: "row"}, 
-                                    React.createElement("div", {className: "large-12 columns"}, 
-                                        React.createElement("div", {className: "row collapse"}, 
-                                            React.createElement("div", {className: "small-10 columns"}, 
-                                                React.createElement("input", {ref: "scoreInput", type: "text", placeholder: "New turn value"})
-                                            ), 
-                                            React.createElement("div", {className: "small-2 columns"}, 
-                                                React.createElement("a", {href: "#", onClick: this.addInputScore, className: "button postfix"}, "+")
+                                    React.createElement("div", {className: "large-12 small-12 columns"}, 
+                                        React.createElement("h4", null, score, " ", increment, " ", React.createElement("span", {className: (!this.state.isScoring ? "" : "hide")}, "FOR ", turns.length))
+                                    )
+                                )
+                            ), 
+
+                            React.createElement("div", {className: "large-8 small-8 columns" + (!this.state.isShowingInput ? "" : " hide")}, 
+                                React.createElement("ul", {className: "button-group right"}, 
+                                  React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.markIt(-1), className: "button small"}, "-")), 
+                                  React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.markIt(0), className: "button small"}, "0")), 
+                                  React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.markIt(1), className: "button small"}, "+"))
+                                )
+                            ), 
+
+                            React.createElement("div", {className: "large-8 small-8 columns" + (this.state.isShowingInput ? "" : " hide")}, 
+                                React.createElement("form", {onSubmit: this.addInputScore}, 
+                                    React.createElement("div", {className: "row"}, 
+                                        React.createElement("div", {className: "large-12 columns"}, 
+                                            React.createElement("div", {className: "row collapse"}, 
+                                                React.createElement("div", {className: "small-10 columns"}, 
+                                                    React.createElement("input", {ref: "scoreInput", type: "text", placeholder: "New turn value"})
+                                                ), 
+                                                React.createElement("div", {className: "small-2 columns"}, 
+                                                    React.createElement("a", {href: "#", onClick: this.addInputScore, className: "button postfix"}, "+")
+                                                )
                                             )
                                         )
                                     )
                                 )
                             )
-                        )
-                    ), 
+                        ), 
 
-                    React.createElement("div", {className: "row"}, 
-                        React.createElement("div", {className: "large-12 columns"}, 
-                            React.createElement("ul", {className: "button-group text-center"}, 
-                                React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.toggleTurns, className: "button secondary tiny " + (turns.length > 0 ? "" : "hide")}, this.state.showOrHide, " Turns")), 
-                                React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.showInput, className: "button secondary tiny"}, this.state.isShowingInput ? "Hide Input" : "Input Turn")), 
-                                React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.removePlayer, className: "button secondary tiny"}, "Remove"))
+                        React.createElement("div", {className: "row"}, 
+                            React.createElement("div", {className: "large-12 columns"}, 
+                                React.createElement("ul", {className: "button-group text-center"}, 
+                                    React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.toggleTurns, className: "button secondary tiny " + (turns.length > 0 ? "" : "hide")}, this.state.showOrHide, " Turns")), 
+                                    React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.showInput, className: "button secondary tiny"}, this.state.isShowingInput ? "Hide Input" : "Input Turn")), 
+                                    React.createElement("li", null, React.createElement("a", {href: "#", onClick: this.removePlayer, className: "button secondary tiny"}, "Remove"))
+                                )
+                            )
+                        ), 
+
+                        React.createElement("div", {className: "row turns" + (this.state.isShowingTurns ? "" : "hide")}, 
+                            React.createElement("div", {className: "large-10 large-offset-1 small-10 small-offset-1 columns"}, 
+                                turnsComponents
                             )
                         )
-                    ), 
 
-                    React.createElement("div", {className: "row turns" + (this.state.isShowingTurns ? "" : "hide")}, 
-                        React.createElement("div", {className: "large-10 large-offset-1 small-10 small-offset-1 columns"}, 
-                            turnsComponents
-                        )
-                    )
-                ), 
-
-                React.createElement("div", {className: "row"}, 
-                    React.createElement("div", {className: "large-10 large-offset-1 small-10 small-offset-1 columns"}, 
-                        React.createElement("hr", null)
                     )
                 )
             )

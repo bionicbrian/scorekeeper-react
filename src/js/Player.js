@@ -117,64 +117,62 @@ module.exports = React.createClass({
         }
 
         return (
-            <div className="row">
+            <div className="row player">
                 <div className="large-12 columns">
-                    <div className="row controls">
-                        <div className="large-4 small-4 columns">
-                            <h3>{this.props.player.name}</h3>
-                            <div className="row">
-                                <div className="large-12 small-12 columns">
-                                    <h4>{score} {increment} <span className={(!this.state.isScoring ? "" : "hide")}>FOR {turns.length}</span></h4>
+                    <div className="panel">
+
+                        <div className="row controls">
+                            <div className="large-4 small-4 columns">
+                                <h3>{this.props.player.name}</h3>
+                                <div className="row">
+                                    <div className="large-12 small-12 columns">
+                                        <h4>{score} {increment} <span className={(!this.state.isScoring ? "" : "hide")}>FOR {turns.length}</span></h4>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className={"large-8 small-8 columns" + (!this.state.isShowingInput ? "" : " hide")}>
-                            <ul className="button-group right">
-                              <li><a href="#" onClick={this.markIt(-1)} className="button small">-</a></li>
-                              <li><a href="#" onClick={this.markIt(0)} className="button small">0</a></li>
-                              <li><a href="#" onClick={this.markIt(1)} className="button small">+</a></li>
-                            </ul>
-                        </div>
+                            <div className={"large-8 small-8 columns" + (!this.state.isShowingInput ? "" : " hide")}>
+                                <ul className="button-group right">
+                                  <li><a href="#" onClick={this.markIt(-1)} className="button small">-</a></li>
+                                  <li><a href="#" onClick={this.markIt(0)} className="button small">0</a></li>
+                                  <li><a href="#" onClick={this.markIt(1)} className="button small">+</a></li>
+                                </ul>
+                            </div>
 
-                        <div className={"large-8 small-8 columns" + (this.state.isShowingInput ? "" : " hide")}>
-                            <form onSubmit={this.addInputScore}>
-                                <div className="row">
-                                    <div className="large-12 columns">
-                                        <div className="row collapse">
-                                            <div className="small-10 columns">
-                                                <input ref="scoreInput" type="text" placeholder="New turn value" />
-                                            </div>
-                                            <div className="small-2 columns">
-                                                <a href="#" onClick={this.addInputScore} className="button postfix">+</a>
+                            <div className={"large-8 small-8 columns" + (this.state.isShowingInput ? "" : " hide")}>
+                                <form onSubmit={this.addInputScore}>
+                                    <div className="row">
+                                        <div className="large-12 columns">
+                                            <div className="row collapse">
+                                                <div className="small-10 columns">
+                                                    <input ref="scoreInput" type="text" placeholder="New turn value" />
+                                                </div>
+                                                <div className="small-2 columns">
+                                                    <a href="#" onClick={this.addInputScore} className="button postfix">+</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="row">
-                        <div className="large-12 columns">
-                            <ul className="button-group text-center">
-                                <li><a href="#" onClick={this.toggleTurns} className={"button secondary tiny " + (turns.length > 0 ? "" : "hide")}>{this.state.showOrHide} Turns</a></li>
-                                <li><a href="#" onClick={this.showInput} className="button secondary tiny">{this.state.isShowingInput ? "Hide Input" : "Input Turn"}</a></li>
-                                <li><a href="#" onClick={this.removePlayer} className="button secondary tiny">Remove</a></li>
-                            </ul>
+                        <div className="row">
+                            <div className="large-12 columns">
+                                <ul className="button-group text-center">
+                                    <li><a href="#" onClick={this.toggleTurns} className={"button secondary tiny " + (turns.length > 0 ? "" : "hide")}>{this.state.showOrHide} Turns</a></li>
+                                    <li><a href="#" onClick={this.showInput} className="button secondary tiny">{this.state.isShowingInput ? "Hide Input" : "Input Turn"}</a></li>
+                                    <li><a href="#" onClick={this.removePlayer} className="button secondary tiny">Remove</a></li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className={"row turns" + (this.state.isShowingTurns ? "" : "hide")}>
-                        <div className="large-10 large-offset-1 small-10 small-offset-1 columns">
-                            {turnsComponents}
+                        <div className={"row turns" + (this.state.isShowingTurns ? "" : "hide")}>
+                            <div className="large-10 large-offset-1 small-10 small-offset-1 columns">
+                                {turnsComponents}
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div className="row">
-                    <div className="large-10 large-offset-1 small-10 small-offset-1 columns">
-                        <hr />
                     </div>
                 </div>
             </div>
