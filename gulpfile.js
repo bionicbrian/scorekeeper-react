@@ -2,6 +2,7 @@
 
 var gulp = require("gulp");
 var browserify = require("browserify");
+var watchify = require("watchify");
 var source = require("vinyl-source-stream");
 var stylus = require("gulp-stylus");
 var to5ify = require("6to5ify");
@@ -18,17 +19,23 @@ gulp.task("css", function () {
         .pipe(gulp.dest("build/css"));
 });
 
-gulp.task("js", function () {
-    browserify(paths.appJS)
-        .transform(to5ify)
-        .bundle()
-        .pipe(source("bundle.js"))
-        .pipe(gulp.dest("build/js/"));
-});
-
 gulp.task("watch", function() {
     gulp.watch(paths.css, ["css"]);
-    gulp.watch(paths.js, ["js"]);
 });
 
-gulp.task("default", ["watch", "css", "js"]);
+gulp.task("default", function () {
+    var b = browserify(paths.appJS);
+
+    var w = watchify(b);
+
+    function rebundle() {
+        console.log("rebundlin'");
+        w.bundle()
+         .pipe(source("bundle.js"))
+         .pipe(gulp.dest("build/js/"));
+    }
+
+    w.transform(to5ify).on("update", rebundle);
+
+    return rebundle();
+});
