@@ -1,28 +1,28 @@
-/** @jsx React.DOM */
+"use strict";
 
-var React = require("react");
-var Player = require("./Player");
-var GameActions = require("./actions/GameActions");
-var Store = require("./store/ScoreKeeper");
+import React from "React";
+import Player from "./Player";
+import GameActions from "./actions/GameActions";
+import Store from "./store/ScoreKeeper";
 
-module.exports = React.createClass({
-    getInitialState: function () {
+export default React.createClass({
+    getInitialState() {
         return { players: Store.getPlayers() };
     },
 
-    updatePlayers: function () {
+    updatePlayers() {
         this.setState({ players: Store.getPlayers() });
     },
 
-    componentDidMount: function () {
+    componentDidMount() {
         Store.addListener("CHANGE", this.updatePlayers);
     },
 
-    componentWillUnmount: function () {
+    componentWillUnmount() {
         Store.removeListener("CHANGE", this.updatePlayers);
     },
 
-    addPlayer: function (event) {
+    addPlayer(event) {
         event.preventDefault();
 
         var inputEl = event.target.parentNode.querySelector("input");
@@ -34,14 +34,10 @@ module.exports = React.createClass({
             GameActions.addPlayer({ name: newPlayerName });
             inputEl.value = "";
         }
-
-        return false;
     },
 
-    render: function () {
-        var players = this.state.players.map(function (player) {
-            return (<Player key={player.id} player={player} />);
-        });
+    render() {
+        var players = this.state.players.map((player) => (<Player key={player.id} player={player} />));
 
         return (
             <div className="app">

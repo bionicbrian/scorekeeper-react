@@ -1,13 +1,12 @@
-/** @jsx React.DOM */
+"use strict";
 
-var React = require("react/addons");
-var Turn = require("./Turn");
-var PlayerActions = require("./actions/PlayerActions");
-var GameActions = require("./actions/GameActions");
+import React from "react";
+import Turn from "./Turn";
+import PlayerActions from "./actions/PlayerActions";
+import GameActions from "./actions/GameActions";
 
-// Player
-module.exports = React.createClass({
-    getInitialState: function () {
+export default React.createClass({
+    getInitialState() {
         return {
             isShowingInput: false,
             isShowingTurns: false,
@@ -18,7 +17,7 @@ module.exports = React.createClass({
         };
     },
 
-    componentWillReceiveProps: function () {
+    componentWillReceiveProps() {
         if (this.props.player.turns.length < 1) {
             this.setState({ isShowingTurns: false });
         }
@@ -27,37 +26,36 @@ module.exports = React.createClass({
     scoringTimeout: null,
     pointValues: [0, 1, -1],
 
-    toggleTurns: function () {
+    toggleTurns() {
         this.setState({ isShowingTurns: !this.state.isShowingTurns });
         this.setState({ showOrHide: this.state.showOrHide === "Show" ? "Hide" : "Show" });
     },
 
-    markIt: function (val) {
-        var that = this;
-        return function () {
-            that.setState({ isShowingInput: false });
-            that.setState({ increment: that.state.increment + val });
-            that.setState({ isScoring: true });
+    markIt(val) {
+        return () => {
+            this.setState({ isShowingInput: false });
+            this.setState({ increment: this.state.increment + val });
+            this.setState({ isScoring: true });
 
-            clearTimeout(that.scoringTimeout);
+            clearTimeout(this.scoringTimeout);
 
             // Delay the actual adding of the turn until the score value is set
-            that.scoringTimeout = setTimeout(that.addTurn, 1000);
-        }
+            this.scoringTimeout = setTimeout(this.addTurn, 1000);
+        };
     },
 
-    reset: function () {
+    reset() {
         this.setState({ isShowingInput: false });
         this.setState({ increment: 0 });
         this.setState({ isScoring: false });
     },
 
-    addTurn: function (turn) {
+    addTurn(turn) {
         PlayerActions.addTurn({ playerId: this.props.player.id, value: this.state.increment });
         this.reset();
     },
 
-    addInputScore: function () {
+    addInputScore() {
         event.preventDefault();
 
         var inputEl = this.refs.scoreInput.getDOMNode();
@@ -68,39 +66,35 @@ module.exports = React.createClass({
             inputEl.value = "";
             this.reset();
         }
-
-        return false;
     },
 
-    removePlayer: function (event) {
+    removePlayer(event) {
+        event.preventDefault();
+
         var confirmation = confirm("Remove " + this.props.player.name + " from the game?");
 
         if (confirmation) {
             GameActions.removePlayer({ playerId: this.props.player.id });
         }
-
-        event.preventDefault();
     },
 
-    showInput: function () {
+    showInput() {
         var scoreInputEl = this.refs.scoreInput.getDOMNode();
         if (this.state.isShowingInput) {
             scoreInputEl.value = "";
             this.setState({ isShowingInput: false });
         } else {
-            this.setState({ isShowingInput: true }, function () {
-                scoreInputEl.focus();
-            });
+            this.setState({ isShowingInput: true }, () => scoreInputEl.focus());
         }
     },
 
-    render: function () {
+    render() {
         var turnsComponents = [];
         var operator = "+";
         var increment = "";
 
         var turns = this.props.player.turns;
-        var score = turns.reduce(function (score, turn) {
+        var score = turns.reduce((score, turn) => {
             return score + turn.value;
         }, 0);
 
@@ -110,9 +104,8 @@ module.exports = React.createClass({
         }
 
         if (turns.length > 0 && this.state.isShowingTurns) {
-            var that = this;
-            turnsComponents = turns.map(function (turn) {
-                return (<Turn turn={turn} playerId={that.props.player.id} key={turn.id} />);
+            turnsComponents = turns.map((turn) => {
+                return (<Turn turn={turn} playerId={this.props.player.id} key={turn.id} />);
             });
         }
 

@@ -1,9 +1,9 @@
-/** @jsx React.DOM */
+"use strict";
 
-var React = require("react");
+import React from "react";
 
-module.exports = React.createClass({
-    render: function () {
+export default React.createClass({
+    render() {
         return (
             <div className="game-listing">
                 <h1>{this.props.game.name}</h1>

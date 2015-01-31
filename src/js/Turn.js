@@ -1,24 +1,23 @@
-/** @jsx React.DOM */
+"use strict";
 
-var _ = require("underscore");
-var React = require("react/addons");
-var PlayerActions = require("./actions/PlayerActions");
-var TurnActions = require("./actions/TurnActions");
+import _ from "underscore";
+import React from "react/addons";
+import PlayerActions from "./actions/PlayerActions";
+import TurnActions from "./actions/TurnActions";
 
-// Turn
-module.exports = React.createClass({
-    getInitialState: function () {
+export default React.createClass({
+    getInitialState() {
         return {
             isEditing: false,
             amount: this.props.turn.value
         };
     },
 
-    componentWillReceiveProps: function (newProps) {
+    componentWillReceiveProps(newProps) {
         this.setState({ amount: this.props.turn.value });
     },
 
-    toggleEditing: function (event) {
+    toggleEditing(event) {
         event.preventDefault();
 
         this.setState({ isEditing: !this.state.isEditing });
@@ -29,11 +28,11 @@ module.exports = React.createClass({
         this.setState({ amount: this.props.turn.value });
     },
 
-    deleteTurn: function () {
+    deleteTurn() {
         PlayerActions.removeTurn({ playerId: this.props.playerId, turnId: this.props.turn.id });
     },
 
-    updateTurnValue: function (event) {
+    updateTurnValue(event) {
         var newVal = event.target.value;
 
         if (!_.isNumber(+newVal) || _.isNaN(+newVal) || newVal === "") {
@@ -45,7 +44,7 @@ module.exports = React.createClass({
         }
     },
 
-    render: function () {
+    render() {
         var classSet = React.addons.classSet;
         var classes = classSet({
             "turn": true,

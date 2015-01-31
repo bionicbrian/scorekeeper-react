@@ -1,18 +1,19 @@
-/** @jsx React.DOM */
+"use strict";
 
-var _ = require("underscore");
-var React = require("react");
-var GameActions = require("../actions/GameActions");
-var store = require("../store/Scorekeeper");
-var GameListing = require("./GameListing");
+import _ from "underscore";
+import React from "react";
+import GameActions from "../actions/GameActions";
+import store from "../store/Scorekeeper";
+import GameListing from "./GameListing";
 
-module.exports = React.createClass({
-    getInitialState: function () {
+export default React.createClass({
+    getInitialState() {
         return { games: store.getGames() };
     },
 
-    addGame: function (event) {
+    addGame(event) {
         event.preventDefault();
+
         var rawInput = this.refs.gameInput.getDOMNode().value + "";
         var gameName = rawInput.replace(/^\s+|\s+$/g, "");
 
@@ -22,20 +23,20 @@ module.exports = React.createClass({
         }
     },
 
-    updateGames: function () {
+    updateGames() {
         this.setState({ games: store.getGames() });
     },
 
-    componentWillMount: function () {
+    componentWillMount() {
         store.on("CHANGE", this.updateGames);
     },
 
-    componentWillUnmount: function () {
+    componentWillUnmount() {
         store.removeEventListener("CHANGE", this.updateGames);
     },
 
-    render: function () {
-        var games = this.state.games.map(function (game) {
+    render() {
+        var games = this.state.games.map((game) => {
             return (<GameListing key={game.id} game={game} />);
         });
 

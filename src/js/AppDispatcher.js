@@ -2,14 +2,12 @@
 
 var AppDispatcher = {
     callbacks: [],
-    register: function (callback) {
+    register(callback) {
         this.callbacks.push(callback);
     },
-    handle: function (data) {
-        this.callbacks.forEach(function (cb) {
-            cb(data);
-        });
+    handle(data) {
+        this.callbacks.forEach((cb) => cb(data));
     }
 };
 
-module.exports = AppDispatcher;
+export default AppDispatcher;
