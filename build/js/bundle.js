@@ -13,6 +13,8 @@ window.addEventListener("load", function () {
   new FastClick(document.body);
 }, false);
 
+React.initializeTouchEvents(true);
+
 React.render(React.createElement(Game, null), document.getElementById("main"));
 
 },{"./Game":315,"react":312}],2:[function(require,module,exports){
@@ -24117,8 +24119,6 @@ module.exports = React.createClass({
     var _this = this;
     return function () {
       _this.setState({ isShowingInput: false });
-      // this.setState({ increment: this.state.increment + val });
-      // this.setState({ isScoring: true });
 
       clearTimeout(_this.scoringTimeout);
       clearTimeout(_this.incrementTimer);
@@ -24258,17 +24258,26 @@ module.exports = React.createClass({
           { className: "score-buttons" },
           React.createElement(
             "button",
-            { onMouseUp: this.markIt(-1), onMouseDown: this.startIncrementing(-1) },
+            { onMouseUp: this.markIt(-1),
+              onMouseDown: this.startIncrementing(-1),
+              onTouchEnd: this.markIt(-1),
+              onTouchStart: this.startIncrementing(-1) },
             "-"
           ),
           React.createElement(
             "button",
-            { onMouseUp: this.markIt(0), onMouseDown: this.startIncrementing(0) },
+            { onMouseUp: this.markIt(0),
+              onMouseDown: this.startIncrementing(0),
+              onTouchEnd: this.markIt(0),
+              onTouchStart: this.startIncrementing(0) },
             "0"
           ),
           React.createElement(
             "button",
-            { onMouseUp: this.markIt(1), onMouseDown: this.startIncrementing(1) },
+            { onMouseUp: this.markIt(1),
+              onMouseDown: this.startIncrementing(1),
+              onTouchEnd: this.markIt(1),
+              onTouchStart: this.startIncrementing(1) },
             "+"
           )
         ),
