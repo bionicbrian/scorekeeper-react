@@ -5,10 +5,10 @@ var AppDispatcher = require("../AppDispatcher");
 
 // TurnActions
 module.exports = {
-    update: function (spec) {
+    update: function (data) {
         AppDispatcher.handle({
             type: enums.UPDATE_TURN,
-            payload: spec
+            data: data
         });
     }
 };
