@@ -24091,6 +24091,7 @@ module.exports = React.createClass({
     return {
       isShowingInput: false,
       isShowingTurns: false,
+      isIncrementing: false,
       showOrHide: "Show",
       isScoring: false,
       isEditing: false,
@@ -24105,6 +24106,7 @@ module.exports = React.createClass({
 
   scoringTimeout: null,
   pointValues: [0, 1, -1],
+  incrementTimer: null,
 
   toggleTurns: function toggleTurns() {
     this.setState({ isShowingTurns: !this.state.isShowingTurns });
@@ -24115,13 +24117,33 @@ module.exports = React.createClass({
     var _this = this;
     return function () {
       _this.setState({ isShowingInput: false });
-      _this.setState({ increment: _this.state.increment + val });
-      _this.setState({ isScoring: true });
+      // this.setState({ increment: this.state.increment + val });
+      // this.setState({ isScoring: true });
 
       clearTimeout(_this.scoringTimeout);
+      clearTimeout(_this.incrementTimer);
 
       // Delay the actual adding of the turn until the score value is set
       _this.scoringTimeout = setTimeout(_this.addTurn, 1000);
+    };
+  },
+
+  startIncrementing: function startIncrementing(val) {
+    var _this2 = this;
+    var speed;
+
+    var increment = function () {
+      speed = speed - speed * 0.1;
+      _this2.setState({ increment: _this2.state.increment + val });
+      _this2.incrementTimer = setTimeout(increment, speed);
+    };
+
+    return function () {
+      speed = 210;
+      _this2.setState({ isScoring: true });
+      _this2.setState({ increment: _this2.state.increment + val });
+      console.log("scoring now");
+      _this2.incrementTimer = setTimeout(increment, 800);
     };
   },
 
@@ -24172,7 +24194,7 @@ module.exports = React.createClass({
   },
 
   render: function render() {
-    var _this2 = this;
+    var _this3 = this;
     var turnsComponents = [];
     var operator = "+";
     var increment = "";
@@ -24189,7 +24211,7 @@ module.exports = React.createClass({
 
     if (turns.length > 0 && this.state.isShowingTurns) {
       turnsComponents = turns.map(function (turn) {
-        return React.createElement(Turn, { turn: turn, playerId: _this2.props.player.id, key: turn.id });
+        return React.createElement(Turn, { turn: turn, playerId: _this3.props.player.id, key: turn.id });
       });
     }
 
@@ -24236,17 +24258,17 @@ module.exports = React.createClass({
           { className: "score-buttons" },
           React.createElement(
             "button",
-            { onClick: this.markIt(-1) },
+            { onMouseUp: this.markIt(-1), onMouseDown: this.startIncrementing(-1) },
             "-"
           ),
           React.createElement(
             "button",
-            { onClick: this.markIt(0) },
+            { onMouseUp: this.markIt(0), onMouseDown: this.startIncrementing(0) },
             "0"
           ),
           React.createElement(
             "button",
-            { onClick: this.markIt(1) },
+            { onMouseUp: this.markIt(1), onMouseDown: this.startIncrementing(1) },
             "+"
           )
         ),
@@ -24452,10 +24474,10 @@ var AppDispatcher = require("../AppDispatcher");
 
 // TurnActions
 module.exports = {
-  update: function (spec) {
+  update: function (data) {
     AppDispatcher.handle({
       type: enums.UPDATE_TURN,
-      payload: spec
+      data: data
     });
   }
 };

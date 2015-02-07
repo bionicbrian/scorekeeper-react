@@ -10,6 +10,7 @@ export default React.createClass({
         return {
             isShowingInput: false,
             isShowingTurns: false,
+            isIncrementing: false,
             showOrHide: "Show",
             isScoring: false,
             isEditing: false,
@@ -25,6 +26,7 @@ export default React.createClass({
 
     scoringTimeout: null,
     pointValues: [0, 1, -1],
+    incrementTimer: null,
 
     toggleTurns() {
         this.setState({ isShowingTurns: !this.state.isShowingTurns });
@@ -34,13 +36,30 @@ export default React.createClass({
     markIt(val) {
         return () => {
             this.setState({ isShowingInput: false });
-            this.setState({ increment: this.state.increment + val });
-            this.setState({ isScoring: true });
 
             clearTimeout(this.scoringTimeout);
+            clearTimeout(this.incrementTimer);
 
             // Delay the actual adding of the turn until the score value is set
             this.scoringTimeout = setTimeout(this.addTurn, 1000);
+        };
+    },
+
+    startIncrementing(val) {
+        var speed;
+
+        var increment = () => {
+            speed = speed - (speed * 0.1);
+            this.setState({ increment: this.state.increment + val });
+            this.incrementTimer = setTimeout(increment, speed);
+        };
+
+        return () => {
+            speed = 210;
+            this.setState({ isScoring: true });
+            this.setState({ increment: this.state.increment + val });
+            console.log("scoring now");
+            this.incrementTimer = setTimeout(increment, 800);
         };
     },
 
@@ -120,9 +139,9 @@ export default React.createClass({
                     </div>
 
                     <div className="score-buttons">
-                        <button onClick={this.markIt(-1)}>-</button>
-                        <button onClick={this.markIt(0)}>0</button>
-                        <button onClick={this.markIt(1)}>+</button>
+                        <button onMouseUp={this.markIt(-1)} onMouseDown={this.startIncrementing(-1)}>-</button>
+                        <button onMouseUp={this.markIt(0)} onMouseDown={this.startIncrementing(0)}>0</button>
+                        <button onMouseUp={this.markIt(1)} onMouseDown={this.startIncrementing(1)}>+</button>
                     </div>
 
                     <div className={"score-input-container" + (this.state.isShowingInput ? " is-showing" : " is-hidden")}>
