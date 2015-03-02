@@ -24287,7 +24287,7 @@ module.exports = React.createClass({
           React.createElement(
             "form",
             { onSubmit: this.addInputScore },
-            React.createElement("input", { type: "text", ref: "scoreInput" }),
+            React.createElement("input", { type: "number", ref: "scoreInput" }),
             React.createElement(
               "button",
               { className: "add-score-btn", onClick: this.addInputScore },
@@ -24399,7 +24399,7 @@ module.exports = React.createClass({
       React.createElement(
         "form",
         { onSubmit: this.toggleEditing },
-        React.createElement("input", { value: value, onChange: this.updateTurnValue, ref: "turnInput" })
+        React.createElement("input", { value: value, onChange: this.updateTurnValue, type: "number", ref: "turnInput" })
       ),
       React.createElement(
         "button",

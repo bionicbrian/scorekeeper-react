@@ -155,7 +155,7 @@ export default React.createClass({
 
                     <div className={"score-input-container" + (this.state.isShowingInput ? " is-showing" : " is-hidden")}>
                         <form onSubmit={this.addInputScore}>
-                            <input type="text" ref="scoreInput" />
+                            <input type="number" ref="scoreInput" />
                             <button className="add-score-btn" onClick={this.addInputScore}>+ ADD TURN</button>
                         </form>
                     </div>

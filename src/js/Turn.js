@@ -57,7 +57,7 @@ export default React.createClass({
             <div className={classes}>
                 <span className="amount-value">{value}</span>
                 <form onSubmit={this.toggleEditing}>
-                    <input value={value} onChange={this.updateTurnValue} ref="turnInput" />
+                    <input value={value} onChange={this.updateTurnValue} type="number" ref="turnInput" />
                 </form>
                 <button onClick={this.toggleEditing}>{this.state.isEditing ? "SAVE" : "EDIT"}</button>
                 <button onClick={this.deleteTurn}>DELETE</button>
