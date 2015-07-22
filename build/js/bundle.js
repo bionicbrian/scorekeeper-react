@@ -24073,7 +24073,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"./Player":316,"./actions/GameActions":318,"./store/ScoreKeeper":321,"React":147}],316:[function(require,module,exports){
+},{"./Player":316,"./actions/GameActions":319,"./store/ScoreKeeper":322,"React":147}],316:[function(require,module,exports){
 "use strict";
 
 var _interopRequire = function (obj) {
@@ -24083,6 +24083,8 @@ var _interopRequire = function (obj) {
 var React = _interopRequire(require("react"));
 
 var Turn = _interopRequire(require("./Turn"));
+
+var ScoreButton = _interopRequire(require("./ScoreButton"));
 
 var PlayerActions = _interopRequire(require("./actions/PlayerActions"));
 
@@ -24256,30 +24258,18 @@ module.exports = React.createClass({
         React.createElement(
           "div",
           { className: "score-buttons" },
-          React.createElement(
-            "button",
-            { onMouseUp: this.markIt(-1),
-              onMouseDown: this.startIncrementing(-1),
-              onTouchEnd: this.markIt(-1),
-              onTouchStart: this.startIncrementing(-1) },
-            "-"
-          ),
-          React.createElement(
-            "button",
-            { onMouseUp: this.markIt(0),
-              onMouseDown: this.startIncrementing(0),
-              onTouchEnd: this.markIt(0),
-              onTouchStart: this.startIncrementing(0) },
-            "0"
-          ),
-          React.createElement(
-            "button",
-            { onMouseUp: this.markIt(1),
-              onMouseDown: this.startIncrementing(1),
-              onTouchEnd: this.markIt(1),
-              onTouchStart: this.startIncrementing(1) },
-            "+"
-          )
+          React.createElement(ScoreButton, { label: "-",
+            incVal: -1,
+            markIt: this.markIt,
+            startIncrementing: this.startIncrementing }),
+          React.createElement(ScoreButton, { label: "0",
+            incVal: 0,
+            markIt: this.markIt,
+            startIncrementing: this.startIncrementing }),
+          React.createElement(ScoreButton, { label: "+",
+            incVal: 1,
+            markIt: this.markIt,
+            startIncrementing: this.startIncrementing })
         ),
         React.createElement(
           "div",
@@ -24325,7 +24315,25 @@ module.exports = React.createClass({
   }
 });
 
-},{"./Turn":317,"./actions/GameActions":318,"./actions/PlayerActions":319,"react":312}],317:[function(require,module,exports){
+},{"./ScoreButton":317,"./Turn":318,"./actions/GameActions":319,"./actions/PlayerActions":320,"react":312}],317:[function(require,module,exports){
+"use strict";
+
+var React = require("react");
+
+module.exports = React.createClass({
+  render: function render() {
+    return React.createElement(
+      "button",
+      { onMouseUp: this.props.markIt(this.props.incVal),
+        onMouseDown: this.props.startIncrementing(this.props.incVal),
+        onTouchEnd: this.props.markIt(this.props.incVal),
+        onTouchStart: this.props.startIncrementing(this.props.incVal) },
+      this.props.label
+    );
+  }
+});
+
+},{"react":312}],318:[function(require,module,exports){
 "use strict";
 
 var _interopRequire = function (obj) {
@@ -24415,7 +24423,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"./actions/PlayerActions":319,"./actions/TurnActions":320,"react/addons":151,"underscore":313}],318:[function(require,module,exports){
+},{"./actions/PlayerActions":320,"./actions/TurnActions":321,"react/addons":151,"underscore":313}],319:[function(require,module,exports){
 "use strict";
 
 var AppDispatcher = require("../AppDispatcher");
@@ -24445,7 +24453,7 @@ module.exports = {
   }
 };
 
-},{"../AppDispatcher":314,"../utils/enums":322}],319:[function(require,module,exports){
+},{"../AppDispatcher":314,"../utils/enums":323}],320:[function(require,module,exports){
 "use strict";
 
 var AppDispatcher = require("../AppDispatcher");
@@ -24475,7 +24483,7 @@ module.exports = {
   }
 };
 
-},{"../AppDispatcher":314,"../utils/enums":322}],320:[function(require,module,exports){
+},{"../AppDispatcher":314,"../utils/enums":323}],321:[function(require,module,exports){
 "use strict";
 
 var enums = require("../utils/enums");
@@ -24491,7 +24499,7 @@ module.exports = {
   }
 };
 
-},{"../AppDispatcher":314,"../utils/enums":322}],321:[function(require,module,exports){
+},{"../AppDispatcher":314,"../utils/enums":323}],322:[function(require,module,exports){
 "use strict";
 
 var Q = require("q");
@@ -24603,7 +24611,7 @@ AppDispatcher.register(function (payload) {
 
 module.exports = store;
 
-},{"../AppDispatcher":314,"../utils/enums":322,"events":148,"q":150,"underscore":313}],322:[function(require,module,exports){
+},{"../AppDispatcher":314,"../utils/enums":323,"events":148,"q":150,"underscore":313}],323:[function(require,module,exports){
 "use strict";
 
 // ENUMS

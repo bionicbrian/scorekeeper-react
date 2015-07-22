@@ -2,6 +2,7 @@
 
 import React from "react";
 import Turn from "./Turn";
+import ScoreButton from "./ScoreButton";
 import PlayerActions from "./actions/PlayerActions";
 import GameActions from "./actions/GameActions";
 
@@ -139,18 +140,18 @@ export default React.createClass({
                     </div>
 
                     <div className="score-buttons">
-                        <button onMouseUp={this.markIt(-1)}
-                                onMouseDown={this.startIncrementing(-1)}
-                                onTouchEnd={this.markIt(-1)}
-                                onTouchStart={this.startIncrementing(-1)}>-</button>
-                        <button onMouseUp={this.markIt(0)}
-                                onMouseDown={this.startIncrementing(0)}
-                                onTouchEnd={this.markIt(0)}
-                                onTouchStart={this.startIncrementing(0)}>0</button>
-                        <button onMouseUp={this.markIt(1)}
-                                onMouseDown={this.startIncrementing(1)}
-                                onTouchEnd={this.markIt(1)}
-                                onTouchStart={this.startIncrementing(1)}>+</button>
+                        <ScoreButton label="-"
+                                     incVal={-1}
+                                     markIt={this.markIt}
+                                     startIncrementing={this.startIncrementing} />
+                        <ScoreButton label="0"
+                                     incVal={0}
+                                     markIt={this.markIt}
+                                     startIncrementing={this.startIncrementing} />
+                        <ScoreButton label="+"
+                                     incVal={1}
+                                     markIt={this.markIt}
+                                     startIncrementing={this.startIncrementing} />
                     </div>
 
                     <div className={"score-input-container" + (this.state.isShowingInput ? " is-showing" : " is-hidden")}>
